@@ -8,19 +8,20 @@ export default function Account(){
 
     const login = useState(null);
     const setLogin = useState(null); 
+    const [data, setData] = useState([]);
 
+    // Obtener variables del login 
+    
     useEffect(() => {
         // conectar con api User esta log enviar true si no enviar false 
         // configuracion 
         // login si no esta registrado crear componente de registro 
 
-        
-        
     })
 
     return (
         <View>
-            <Text></Text>
+            <Text>A</Text>
         </View>
     )
 }
