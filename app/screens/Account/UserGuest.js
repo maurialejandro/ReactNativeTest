@@ -1,10 +1,22 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, Button } from "react-native";
+import PropTypes from "prop-types";
 
-export default function UserGuest(){
-    return (
+const UserGuest = ({ onSubmit }) => (
         <View>
             <Text>Account for User UserGues</Text>
+            <Button 
+                title = "Login"
+                onPress={onSubmit}
+            />
+            <Button 
+                title = "Register"
+            />
+            
         </View>
-    );
+
+);
+UserGuest.propTypes = {
+    onSubmit: PropTypes.func.isRequired
 }
+export default UserGuest;

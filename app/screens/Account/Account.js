@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, AsyncStorage } from "react-native";
-
+import React, { useState, useEffect, Component } from "react";
+import { View, Text, AsyncStorage, Button } from "react-native";
+import  apiLogin  from "../../src/services/apiLogin";
 import UserGuest from "./UserGuest";
-import UaserLogged from "./UserLogged";
+import UserLogged from "./UserLogged";
 
-export default function Account(){
+class Account extends Component{
     
     _storeData = async () => {
         try {
@@ -16,33 +16,34 @@ export default function Account(){
           // Error saving data
         }
     };
-    _retrieveData = async () => {
-  try {
-    const value = await AsyncStorage.getAllKeys();
- 
-    if (value !== null) {
-      // We have data!!
-      console.log(value);
-    }
-  } catch (error) {
-    // Error retrieving data
+  _retrieveData = async () => {
+      try {
+        const value = await AsyncStorage.getAllKeys();
+      
+        if (value !== null) {
+          // We have data!!
+          console.log(value);
+        }
+      } catch (error) {
+        // Error retrieving data
   }
-};const login = useState(null);
-    const setLogin = useState(null); 
-    const [data, setData] = useState([]);
 
+  onSubmit = async () => {
+    console.log(this);
+    try {
+      const result = await apiLogin();
+      alert(result);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  prueba = async () => {
+    alert("aqo");
+  }
+};
     // Obtener variables del login 
-    useEffect(() => {
-        // conectar con api User esta log enviar true si no enviar false 
-        // configuracion 
-        // login si no esta registrado crear componente de registro 
-        _storeData();
-        _retrieveData();
-    })
-
-    return (
-        <View>
-            <Text>A</Text>
-        </View>
-    )
+    render(){
+      return <UserGuest onSubmit={this.onSubmit} />;
+    }
 }
+export default Account;
