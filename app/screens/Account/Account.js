@@ -1,10 +1,11 @@
-import React, { useState, useEffect, Component } from "react";
-import { View, Text, AsyncStorage, Button } from "react-native";
-import  apiLogin  from "../../src/services/apiLogin";
-import UserGuest from "./UserGuest";
-import UserLogged from "./UserLogged";
+import React, { useState, useEffect, Component } from "react"
+import  apiLogin  from "../../src/services/apiLogin"
+import UserGuest from "./UserGuest"
+import UserLogged from "./UserLogged"
+import Loading from "../../components/Loading"
 
-class Account extends Component{
+export default function Account(){
+    const [login, setLogin] = useState(false)
     
     _storeData = async () => {
         try {
@@ -41,9 +42,7 @@ class Account extends Component{
     alert("aqo");
   }
 };
-    // Obtener variables del login 
-    render(){
-      return <UserGuest onSubmit={this.onSubmit} />;
-    }
+    if(login === null) return <Loading isVisible={true} text="Cargando.."/> 
+    return login ? <UserLogged/> : <UserGuest/>;
+  
 }
-export default Account;
