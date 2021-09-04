@@ -17,6 +17,7 @@ export default function RegisterForm(props){
             toastRef.current.show("Contraseña o correo incorrectos")
         } else {
             console.log("guardar datos en api")          
+            
         }
     }
     const onChange = (e, type) => {
