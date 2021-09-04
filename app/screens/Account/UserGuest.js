@@ -1,7 +1,7 @@
 import React from "react"
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native"
 import { Button } from "react-native-elements"
-import { NavigationHelpersContext, useNavigation } from "@react-navigation/native"
+import { useNavigation } from "@react-navigation/native"
 
 export default function UserGuest(){
     const navigation = useNavigation()
