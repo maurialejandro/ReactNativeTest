@@ -6,7 +6,7 @@ import RegisterForm from "../../components/Account/RegisterForm"
 
 export default function Register(){
     const toastRef = useRef();
-    
+
     return(
         <KeyboardAwareScrollView>
             <Image 

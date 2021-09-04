@@ -1,29 +1,26 @@
-import React, { useEffect, useState }  from "react"
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 
-export default register = () => {
-    const [isLoading, setLoading] = useState(true);
-    const [data, setData] = useState([]);
+export function registerUser(formData){
+  return fetch('http://192.168.1.108:8000/api/register', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': 'rAmexi7UB4mUmeL6vRQ5buzftRTuuDrztA9YeltC'
+    },
+    body: JSON.stringify({
+      name: formData.email,
+      email: formData.email,
+      password: formData.password
+    })
+  })
+  .then((response) => response.json())
+  .then((responseJson) => {
 
-    //generar peticion a la api
-    try {
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'X-CSRF-TOKEN': 'm42SVchpoCKyYDSXPmdvcX8uhg4jOmmzuHlKqP8F' },
-            body: JSON.stringify({ 
-                name: 'biker_mauri',
-                email: "bbcc@biker.com",
-                password: "qwert"
-            })
-        };
-        fetch('http://127.0.0.1:8000/api/login', requestOptions)
-            .then(response => response.json())
-            .then(data => this.setState({ postId: data.id }));
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-
-      return response
-
+   console.log(responseJson)
+  })
+  .catch((error) =>{
+    console.error(error);
+  });
 }

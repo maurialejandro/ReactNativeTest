@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native"
 import { Icon, Input, Button } from "react-native-elements"
 import { isEmpty, size } from "lodash"
 import { validateEmail } from "../../screens/utils/validation"
+import { registerUser } from "../../screens/utils/register"
 
 export default function RegisterForm(props){
     
@@ -10,13 +11,14 @@ export default function RegisterForm(props){
     const [showPassword,setShowPassword] = useState(false)
     const [showPassword2,setShowPassword2] = useState(false)
     const [formData, setFormData] = useState(defaultFormValues())
-    
+  
     const onSubmit = () => {
   
         if ( isEmpty(formData.email) || isEmpty(formData.password) || isEmpty(formData.repeatPassword) ||  (!validateEmail(formData.email)) || (formData.password != formData.repeatPassword) || (size(formData.password)<=6)  ){
             toastRef.current.show("Contraseña o correo incorrectos")
         } else {
-            console.log("guardar datos en api")          
+            console.log("guardar datos en api")
+            registerUser(formData)
             
         }
     }
