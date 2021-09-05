@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 
 export function registerUser(formData){
-  return fetch('http://192.168.1.108:8000/api/register', {
+  fetch('http://172.20.10.5:8000/api/register', {
     method: 'POST',
-    headers: {
-      Accept: 'application/json',
-              'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': 'rAmexi7UB4mUmeL6vRQ5buzftRTuuDrztA9YeltC'
-    },
+    headers: {'X-CSRF-TOKEN': 'rQCXl9HXnIYmRn8XTDRQe8UNyIKuR3tkzU7Nvhd8'},
     body: JSON.stringify({
       name: formData.email,
       email: formData.email,
       password: formData.password
     })
   })
-  .then((response) => response.json())
   .then((responseJson) => {
-
-   console.log(responseJson)
+      console.log(responseJson)
   })
   .catch((error) =>{
     console.error(error);

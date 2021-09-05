@@ -3,27 +3,38 @@ import { View, Text, StyleSheet } from "react-native"
 import { Icon, Input, Button } from "react-native-elements"
 import { isEmpty, size } from "lodash"
 import { validateEmail } from "../../screens/utils/validation"
-import { registerUser } from "../../screens/utils/register"
+//import { registerUser } from "../../screens/utils/register"
+//import { getToken } from "../../screens/utils/token"
 
 export default function RegisterForm(props){
-    
+    const [token, setToken] = useState(null)
     const {toastRef} = props    
     const [showPassword,setShowPassword] = useState(false)
     const [showPassword2,setShowPassword2] = useState(false)
     const [formData, setFormData] = useState(defaultFormValues())
-  
+    const getToken = () => {
+        fetch('http://172.20.10.5:8000/api/token')
+        .then((response) => response.json())
+        .then(data => {
+            setToken(data)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
     const onSubmit = () => {
   
         if ( isEmpty(formData.email) || isEmpty(formData.password) || isEmpty(formData.repeatPassword) ||  (!validateEmail(formData.email)) || (formData.password != formData.repeatPassword) || (size(formData.password)<=6)  ){
             toastRef.current.show("Contraseña o correo incorrectos")
         } else {
-            console.log("guardar datos en api")
-            registerUser(formData)
-            
-        }
+            getToken()
+            if(token){
+                console.log(token.token)
+            }
+        }  
     }
     const onChange = (e, type) => {
-        setFormData({ ...formData, [type]: e.nativeEvent.text}   )
+        setFormData({ ...formData, [type]: e.nativeEvent.text})
     }   
     return(
         <View style={styles.formContainer}>
