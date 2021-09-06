@@ -8,15 +8,36 @@ import { validateEmail } from "../../screens/utils/validation"
 
 export default function RegisterForm(props){
     const [token, setToken] = useState(null)
+    const [response, setResponse] = useState(null)
     const {toastRef} = props    
     const [showPassword,setShowPassword] = useState(false)
     const [showPassword2,setShowPassword2] = useState(false)
     const [formData, setFormData] = useState(defaultFormValues())
     const getToken = () => {
-        fetch('http://172.20.10.5:8000/api/token')
+        fetch('http://192.168.1.5:8000/api/token')
         .then((response) => response.json())
         .then(data => {
             setToken(data)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+
+    const registerUser = (tok) => {
+    
+        fetch('http://192.168.1.5:8000/api/register',{
+            method: 'POST',
+            headers: {'X-CSRF-TOKEN': tok},
+            body: JSON.stringify({
+                name: formData.email,
+                email: formData.email,
+                password: formData.password
+            })
+        })
+        .then((response) => response.json())
+        .then((responseJSON) => {
+            setResponse(responseJSON);
         })
         .catch((error) => {
             console.log(error)
@@ -29,8 +50,16 @@ export default function RegisterForm(props){
         } else {
             getToken()
             if(token){
-                console.log(token.token)
+                registerUser(token.token)
+                if(response){
+                    if(response.code === 400){
+                        toastRef.current.show(response.message)
+                    }else if(response.code === 200){
+                        toastRef.current.show("User creado satisfactoriamente")
+                    }
+                }
             }
+          
         }  
     }
     const onChange = (e, type) => {
