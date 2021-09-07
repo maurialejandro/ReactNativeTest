@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from "react"
 import { View, Text, StyleSheet } from "react-native"
+import Loading from "../Loading"
 import { Icon, Input, Button } from "react-native-elements"
 import { isEmpty, size } from "lodash"
 import { validateEmail } from "../../screens/utils/validation"
-//import { registerUser } from "../../screens/utils/register"
-//import { getToken } from "../../screens/utils/token"
+import { useNavigation } from "@react-navigation/native"
+
 
 export default function RegisterForm(props){
     const [token, setToken] = useState(null)
@@ -13,6 +14,9 @@ export default function RegisterForm(props){
     const [showPassword,setShowPassword] = useState(false)
     const [showPassword2,setShowPassword2] = useState(false)
     const [formData, setFormData] = useState(defaultFormValues())
+    const navigation = useNavigation()
+    const [loading, setLoading] = useState(false)
+    // Probar con que tal funciona con funciones
     const getToken = () => {
         fetch('http://192.168.1.5:8000/api/token')
         .then((response) => response.json())
@@ -25,7 +29,7 @@ export default function RegisterForm(props){
     }
 
     const registerUser = (tok) => {
-    
+        setLoading(true)
         fetch('http://192.168.1.5:8000/api/register',{
             method: 'POST',
             headers: {'X-CSRF-TOKEN': tok},
@@ -37,25 +41,35 @@ export default function RegisterForm(props){
         })
         .then((response) => response.json())
         .then((responseJSON) => {
-            setResponse(responseJSON);
+            if(setResponse(responseJSON)){
+                if(responseJSON.status === "success"){
+                
+                }else if(responseJSON.message === "User ya existe"){
+                    toastRef.current.show(responseJSON.message)
+                }
+            }
+           
         })
         .catch((error) => {
             console.log(error)
         })
     }
     const onSubmit = () => {
-  
+       
         if ( isEmpty(formData.email) || isEmpty(formData.password) || isEmpty(formData.repeatPassword) ||  (!validateEmail(formData.email)) || (formData.password != formData.repeatPassword) || (size(formData.password)<=6)  ){
             toastRef.current.show("Contraseña o correo incorrectos")
         } else {
             getToken()
             if(token){
-                registerUser(token.token)
-                if(response){
+                if(registerUser(token.token)){
                     if(response.code === 400){
-                        toastRef.current.show(response.message)
-                    }else if(response.code === 200){
-                        toastRef.current.show("User creado satisfactoriamente")
+                        console.log(response)
+                        setLoading(false)
+                        navigation.navigate('account')
+                    }
+                    if(response.code === 200){
+                        setLoading(false)
+                        console.log(response.status)
                     }
                 }
             }
@@ -114,6 +128,10 @@ export default function RegisterForm(props){
                 containerStyle={styles.btnContainerRegister}
                 buttonStyle={styles.btnRegister}
                 onPress={onSubmit}
+            />
+            <Loading 
+                isVisible={loading}
+                text="Creando cuenta"
             />
         </View>
     )
