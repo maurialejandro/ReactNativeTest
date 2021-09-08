@@ -1,21 +1,30 @@
-import React, {useState, useRef} from "react";
-import { StyleSheet, View, Text } from "react-native";
+import React, {useState, useRef, useEffect} from "react";
+import { StyleSheet, View, Text, AppRegistry } from "react-native";
 import { Button } from "react-native-elements"
 import Toast from "react-native-easy-toast"
 import Loading from "../../components/Loading"
+import InfoUser from "../../components/Account/InfoUser"
 
 export default function UserLogged(){
     const toastRef = useRef()
+    const [userInfo, setUserInfo] = useState(null)
     const [loading, setLoadin] = useState(false)
     const [loadingText, setLoadingText] = useState("")
- 
+
+    useEffect(() => {
+        (async = () => { // funcion anonima autoejecutable
+            //const user = await AppRegistry.auth().traerUser
+            console.log("traer al user y mejorar peticiones")
+            
+        })()
+    })
     return(
         <View style={styles.viewUserInfo}>
-            <Text>InfoUser...</Text>
+            {userInfo && <InfoUser userInfo={userInfo} />} 
             <Text>AccountOptioms</Text>
             <Button 
                 title="Cerrar sesión" 
-                onPress={() => console.log("acción logout")} 
+                onPress={() => console.log("salir")} 
                 buttonStyle={styles.btnCloseSession} 
                 titleStyle={styles.btnCloseSessionText}
             />
@@ -26,6 +35,7 @@ export default function UserLogged(){
 }
 const styles = StyleSheet.create({
     viewUserInfo: {
+        
         minHeight: "100%",
         backgroundColor: "#f2f2f2"
     },
