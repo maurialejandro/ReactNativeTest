@@ -4,7 +4,7 @@ import UserLogged from "./UserLogged"
 import Loading from "../../components/Loading"
 
 export default function Account(){
-    const [login, setLogin] = useState(false)
+    const [login, setLogin] = useState(true)
     
     _storeData = async () => {
         try {
