@@ -13,6 +13,7 @@ export default function Account(){
             let data = fetch(urlToken).then((response) => response.json()).then((json) => {
                 _storeData(json.token)
             })        
+            
         })()
 
       }, [])

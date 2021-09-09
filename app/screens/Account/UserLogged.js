@@ -30,7 +30,6 @@ export default function UserLogged(){
             />
             <Toast ref={toastRef} posistion="center" opacity={0,9} />
             <Loading text={loadingText} isVisible={loading} />
-
         </View>
     )
 }

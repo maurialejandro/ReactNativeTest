@@ -35,12 +35,13 @@ export default function RegisterForm(props){
             let response = await register
             if(response){
                 if(response.status != "error" && response.status == "success"){
-                    toastRef.current.show(response.message)
                     setLoading(false)
-                    navigation.navigate("account")
+                    toastRef.current.show(response.message)
+                    navigation.goBack()
+                    //navigation.navigate("account")  
                 }else{
-                    toastRef.current.show(response.message)
                     setLoading(false)
+                    toastRef.current.show(response.message)
                 }
             }
         } catch (error) {

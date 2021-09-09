@@ -1,51 +1,54 @@
 import React, {useState} from "react"
 import { StyleSheet, View } from "react-native"
+import Loading from "../Loading"
 import { isEmpty, size } from "lodash"
 import { Input, Icon, Button } from "react-native-elements"
 import { validateEmail } from "../../screens/utils/validation"
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function LoginForm(props){
     const [showPassword,setShowPassword] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState(defaultFormValues())
     const {toastRef} = props 
-    const [token, setToken] = useState(null)
-    const [response, setResponse] = useState(null)
+    const urlLogin = 'http://192.168.1.5:8000/api/login'
     
-    function getToken() {
-        fetch('http://192.168.1.5:8000/api/token')
-        .then((response) => response.json())
-        .then(data => {
-            setToken(data)
-            loginUser(data.token)
-        })
-        .catch((error) => {
-            console.log(error)
-        })
-    }
-
-    const loginUser = (tok) => {
-        console.log(tok)
-        fetch('http://192.168.1.5:8000/api/login',{
-            method: 'POST',
-            headers: {'X-CSRF-TOKEN': tok},      
-            body: JSON.stringify({
-                email: formData.email,
-                password: formData.password
+    loginUser = async () => {
+        try {
+            setLoading(true)
+            const value = await AsyncStorage.getItem('@MySuperStore:666999');
+            
+            let login = await fetch(urlLogin, {
+                method: 'POST',
+                headers: {'X-CSRF-TOKEN': value},
+                body: JSON.stringify({
+                    email: formData.email,
+                    password: formData.password
+                })
             })
-        })
-        .then((response) => response.json())
-        .then((responseJSON) => {
-            console.log(responseJSON)
-        })
-        .catch((error) => {
+            .then((response) => response.json())
+            .then((json) => console.log(json))
+            .catch((error) => console.log(error))
+            let response = await login
+            
+            if(response){
+                if(response.status != "error" && response.status == "success"){
+                    setLoading(false)
+                    toastRef.current.show(response.message)
+                }else{
+                    setLoading(false)
+                    toastRef.current.show(response.message)
+                }
+            }
+        } catch (error) {
             console.log(error)
-        })
-    }
+        }
+    }    
     const onSubmit = () => {
         if ( isEmpty(formData.email) || isEmpty(formData.password) ||  (!validateEmail(formData.email)) || (size(formData.password)<=6)  ){
             toastRef.current.show("Contraseña o correo incorrectos")
         } else { 
-            getToken()
+            loginUser()
         }  
     }
     const onChange = (e, type) => {
@@ -85,6 +88,10 @@ export default function LoginForm(props){
                 containerStyle={styles.btnContainerLogin}
                 buttonStyle={styles.btnLogin}
                 onPress={onSubmit}
+            />
+            <Loading 
+                isVisible={loading}
+                text="Iniciando sesión"
             />
         </View>
     )
