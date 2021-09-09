@@ -8,7 +8,7 @@ import InfoUser from "../../components/Account/InfoUser"
 export default function UserLogged(){
     const toastRef = useRef()
     const [userInfo, setUserInfo] = useState(null)
-    const [loading, setLoadin] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [loadingText, setLoadingText] = useState("")
 
     useEffect(() => {

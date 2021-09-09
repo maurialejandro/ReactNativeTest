@@ -18,6 +18,7 @@ export default function RegisterForm(props){
 
     registerUser = async () => {
         try {
+            setLoading(true)
             const value = await AsyncStorage.getItem('@MySuperStore:666999');
             let register = await fetch(urlRegister, {
                 method: 'POST',
@@ -29,15 +30,25 @@ export default function RegisterForm(props){
                 })
             })
             .then((response) => response.json())
-            .then((json) => console.log(json))
+            .then((json) => json)
             .catch((error) => console.log(error))
-           
+            let response = await register
+            if(response){
+                if(response.status != "error" && response.status == "success"){
+                    toastRef.current.show(response.message)
+                    setLoading(false)
+                    navigation.navigate("account")
+                }else{
+                    toastRef.current.show(response.message)
+                    setLoading(false)
+                }
+            }
         } catch (error) {
             console.log(error)
         }
     }    
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
        
         if ( isEmpty(formData.email) || isEmpty(formData.password) || isEmpty(formData.repeatPassword) ||  (!validateEmail(formData.email)) || (formData.password != formData.repeatPassword) || (size(formData.password)<=6)  ){
             toastRef.current.show("Contraseña o correo incorrectos")

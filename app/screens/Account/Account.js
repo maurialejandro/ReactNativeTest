@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Component } from "react"
+import React, { useState, useEffect} from "react"
 import UserGuest from "./UserGuest"
 import UserLogged from "./UserLogged"
 import Loading from "../../components/Loading"
@@ -9,13 +9,13 @@ export default function Account(){
     const urlToken = 'http://192.168.1.5:8000/api/token'
 
     useEffect(() => {
-      (async = () => {
-          let data = fetch(urlToken).then((response) => response.json()).then((json) => {
-              _storeData(json.token)
-          })        
-      })()
+        (async = () => {
+            let data = fetch(urlToken).then((response) => response.json()).then((json) => {
+                _storeData(json.token)
+            })        
+        })()
 
-      })
+      }, [])
       _storeData = async (token) => {
           try {
               await AsyncStorage.setItem(
@@ -26,7 +26,7 @@ export default function Account(){
             console.log(error)
           }
       };
-    if(login === null) return <Loading isVisible={true} text="Cargando.."/> 
-    return login ? <UserLogged/> : <UserGuest/>;
+    if(login === null) return <Loading isVisible={true} text="Cargando.." /> 
+    return login ? <UserLogged/> : <UserGuest/>
   
 }
