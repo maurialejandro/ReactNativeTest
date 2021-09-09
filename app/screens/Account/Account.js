@@ -2,45 +2,30 @@ import React, { useState, useEffect, Component } from "react"
 import UserGuest from "./UserGuest"
 import UserLogged from "./UserLogged"
 import Loading from "../../components/Loading"
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function Account(){
-    const [login, setLogin] = useState(true)
-    
-    _storeData = async () => {
-        try {
-            await AsyncStorage.setItem(
-                '@MySuperStore:123456',
-                'I like to save it.'
-            );
-        } catch (error) {
-          // Error saving data
-        }
-    };
-  _retrieveData = async () => {
-      try {
-        const value = await AsyncStorage.getAllKeys();
-      
-        if (value !== null) {
-          // We have data!!
-          console.log(value);
-        }
-      } catch (error) {
-        // Error retrieving data
-  }
+    const [login, setLogin] = useState(false)
+    const urlToken = 'http://192.168.1.5:8000/api/token'
 
-  onSubmit = async () => {
-    console.log(this);
-    try {
-      const result = await apiLogin();
-      alert(result);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  prueba = async () => {
-    alert("aqo");
-  }
-};
+    useEffect(() => {
+      (async = () => {
+          let data = fetch(urlToken).then((response) => response.json()).then((json) => {
+              _storeData(json.token)
+          })        
+      })()
+
+      })
+      _storeData = async (token) => {
+          try {
+              await AsyncStorage.setItem(
+                  '@MySuperStore:666999',
+                  token
+              );
+          } catch (error) {
+            console.log(error)
+          }
+      };
     if(login === null) return <Loading isVisible={true} text="Cargando.."/> 
     return login ? <UserLogged/> : <UserGuest/>;
   

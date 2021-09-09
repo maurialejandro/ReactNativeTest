@@ -8,12 +8,12 @@ import InfoUser from "../../components/Account/InfoUser"
 export default function UserLogged(){
     const toastRef = useRef()
     const [userInfo, setUserInfo] = useState(null)
-    const [loading, setLoadin] = useState(false)
+    const [loading, setLoadin] = useState(true)
     const [loadingText, setLoadingText] = useState("")
 
     useEffect(() => {
         (async = () => { // funcion anonima autoejecutable
-            //const user = await AppRegistry.auth().traerUser
+            //const user = await api.auth().traerUser
             console.log("traer al user y mejorar peticiones")
             
         })()
@@ -30,6 +30,7 @@ export default function UserLogged(){
             />
             <Toast ref={toastRef} posistion="center" opacity={0,9} />
             <Loading text={loadingText} isVisible={loading} />
+
         </View>
     )
 }
