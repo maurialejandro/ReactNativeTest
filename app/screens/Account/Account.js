@@ -12,21 +12,30 @@ export default function Account(){
         (async = () => {
             let data = fetch(urlToken).then((response) => response.json()).then((json) => {
                 _storeData(json.token)
-            })        
-            
+            })
+            _getToken()        
         })()
+    }, [])
 
-      }, [])
-      _storeData = async (appToken) => {
-          try {
-              await AsyncStorage.setItem(
-                  '@MySuperStore:666999',
-                  token
-              );
-          } catch (error) {
-            console.log(error)
-          }
-      };
+        _storeData = async (appToken) => {
+            try {
+                await AsyncStorage.setItem(
+                    '@MySuperStore:666999',
+                    appToken
+                );
+            } catch (error) {
+              console.log(error)
+            }
+        };
+        _getToken = async () => {
+            const token = await AsyncStorage.getItem('token')
+            if(token){
+                // aqui hay que comprobar si el token es igual al token de la api como ¿? 
+                // es mejor guardar token o credenciales del user para hacer login automatico ¿? 
+                // investigar y usar la mejor forma de usar el token del usuario
+                setLogin(true)
+            }
+        }
       
     if(login === null) return <Loading isVisible={true} text="Cargando.." /> 
     return login ? <UserLogged/> : <UserGuest/>
