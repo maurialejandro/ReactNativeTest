@@ -4,6 +4,7 @@ import Loading from "../Loading"
 import { isEmpty, size } from "lodash"
 import { Input, Icon, Button } from "react-native-elements"
 import { validateEmail } from "../../screens/utils/validation"
+import { useNavigation } from "@react-navigation/native"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function LoginForm(props){
@@ -12,7 +13,8 @@ export default function LoginForm(props){
     const [formData, setFormData] = useState(defaultFormValues())
     const {toastRef} = props 
     const urlLogin = 'http://192.168.1.5:8000/api/login'
-    
+    const navigation = useNavigation()
+
     let loginUser = async () => {
         try {
             setLoading(false)
@@ -34,8 +36,7 @@ export default function LoginForm(props){
                 if(response.token){
                     setLoading(false)
                     _storeToken(response.token)
-                    let token = await AsyncStorage.getItem('token')
-                    toastRef.current.show(token)
+                    navigation.navigate('restaurants')
                 }else{
                     setLoading(false)
                     toastRef.current.show('Fallo inicio sesión')

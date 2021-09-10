@@ -1,15 +1,19 @@
 import React, {useState, useRef, useEffect} from "react";
 import { StyleSheet, View, Text, AppRegistry } from "react-native";
 import { Button } from "react-native-elements"
+import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-easy-toast"
 import Loading from "../../components/Loading"
 import InfoUser from "../../components/Account/InfoUser"
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function UserLogged(){
     const toastRef = useRef()
     const [userInfo, setUserInfo] = useState(null)
     const [loading, setLoading] = useState(false)
     const [loadingText, setLoadingText] = useState("")
+    const navigation = useNavigation()
+
 
     useEffect(() => {
         (async = () => { // funcion anonima autoejecutable
@@ -18,13 +22,22 @@ export default function UserLogged(){
             
         })()
     })
+
+    let logout = async () => {
+        try{
+            await AsyncStorage.removeItem('token')
+            navigation.navigate('account')
+        }catch (error) {
+            console.log(error)
+        }
+    }
     return(
         <View style={styles.viewUserInfo}>
             {userInfo && <InfoUser userInfo={userInfo} />} 
             <Text>AccountOptioms</Text>
             <Button 
                 title="Cerrar sesión" 
-                onPress={() => console.log("salir")} 
+                onPress={() => logout()} 
                 buttonStyle={styles.btnCloseSession} 
                 titleStyle={styles.btnCloseSessionText}
             />
