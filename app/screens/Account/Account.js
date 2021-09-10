@@ -17,7 +17,7 @@ export default function Account(){
         })()
 
       }, [])
-      _storeData = async (token) => {
+      _storeData = async (appToken) => {
           try {
               await AsyncStorage.setItem(
                   '@MySuperStore:666999',
@@ -27,6 +27,7 @@ export default function Account(){
             console.log(error)
           }
       };
+      
     if(login === null) return <Loading isVisible={true} text="Cargando.." /> 
     return login ? <UserLogged/> : <UserGuest/>
   

@@ -13,11 +13,11 @@ export default function LoginForm(props){
     const {toastRef} = props 
     const urlLogin = 'http://192.168.1.5:8000/api/login'
     
-    loginUser = async () => {
+    let loginUser = async () => {
         try {
-            setLoading(true)
+            setLoading(false)
             const value = await AsyncStorage.getItem('@MySuperStore:666999');
-            
+          
             let login = await fetch(urlLogin, {
                 method: 'POST',
                 headers: {'X-CSRF-TOKEN': value},
@@ -27,23 +27,32 @@ export default function LoginForm(props){
                 })
             })
             .then((response) => response.json())
-            .then((json) => console.log(json))
+            .then((json) => json)
             .catch((error) => console.log(error))
             let response = await login
-            
             if(response){
-                if(response.status != "error" && response.status == "success"){
+                if(response.token){
                     setLoading(false)
-                    toastRef.current.show(response.message)
+                    _storeToken(response.token)
+                    let token = await AsyncStorage.getItem('token')
+                    toastRef.current.show(token)
                 }else{
                     setLoading(false)
-                    toastRef.current.show(response.message)
+                    toastRef.current.show('Fallo inicio sesión')
                 }
             }
         } catch (error) {
             console.log(error)
         }
     }    
+    
+    let _storeToken = async (token) => {
+        try{
+            await AsyncStorage.setItem('token', token)
+        }catch (error) {
+            console.log(error)
+        }
+    }
     const onSubmit = () => {
         if ( isEmpty(formData.email) || isEmpty(formData.password) ||  (!validateEmail(formData.email)) || (size(formData.password)<=6)  ){
             toastRef.current.show("Contraseña o correo incorrectos")
@@ -51,6 +60,7 @@ export default function LoginForm(props){
             loginUser()
         }  
     }
+
     const onChange = (e, type) => {
         setFormData({ ...formData, [type]: e.nativeEvent.text})
     }
