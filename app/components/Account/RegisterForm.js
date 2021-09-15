@@ -20,7 +20,7 @@ export default function RegisterForm(props){
         try {
             setLoading(true)
             const value = await AsyncStorage.getItem('@MySuperStore:666999');
-            let register = await fetch(urlRegister, {
+            await fetch(urlRegister, {
                 method: 'POST',
                 headers: {'X-CSRF-TOKEN': value},
                 body: JSON.stringify({

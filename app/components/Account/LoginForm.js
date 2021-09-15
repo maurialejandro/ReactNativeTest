@@ -15,7 +15,7 @@ export default function LoginForm(props){
     const {toastRef} = props 
     const urlLogin = 'http://192.168.1.5:8000/api/login'
     const navigation = useNavigation()
-
+    
     let loginUser = async () => {
         try {
             setLoading(true)
@@ -33,6 +33,7 @@ export default function LoginForm(props){
                 setLoading(false)
                 if(responseJSON.token){
                     _storeToken(responseJSON.token)
+                    console.log('se hizo login satisfactoriamente')
                     navigation.navigate('account')
                 }else{
                     toastRef.current.show("Contraseña o correo incorrectos")
@@ -42,7 +43,7 @@ export default function LoginForm(props){
                 setLoading(false)
                 console.log(error)
             })
-            r
+            
         } catch (error) {
             console.log(error)
         }

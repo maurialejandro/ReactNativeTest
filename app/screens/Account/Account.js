@@ -16,9 +16,8 @@ export default function Account(){
             _getToken()        
         
         })()
-        
     }, [])
-
+   
     _storeData = async (appToken) => {
         try {
             await AsyncStorage.setItem(
