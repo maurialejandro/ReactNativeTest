@@ -4,7 +4,7 @@ import Loading from "../Loading"
 import { Icon, Input, Button } from "react-native-elements"
 import { isEmpty, size } from "lodash"
 import { validateEmail } from "../../screens/utils/validation"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, Link } from "@react-navigation/native"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function RegisterForm(props){
@@ -16,7 +16,7 @@ export default function RegisterForm(props){
     const [loading, setLoading] = useState(false)
     const urlRegister = 'http://192.168.1.5:8000/api/register'
 
-    registerUser = async () => {
+    let registerUser = async () => {
         try {
             setLoading(true)
             const value = await AsyncStorage.getItem('@MySuperStore:666999');
@@ -30,20 +30,18 @@ export default function RegisterForm(props){
                 })
             })
             .then((response) => response.json())
-            .then((json) => json)
-            .catch((error) => console.log(error))
-            let response = await register
-            if(response){
-                if(response.status != "error" && response.status == "success"){
+            .then((json) => {
+                console.log(json)
+                if(json.status === 'success' && json.message === 'User creado' ){
                     setLoading(false)
-                    toastRef.current.show(response.message)
+                    toastRef.current.show(json.message)
                     navigation.goBack()
-                    //navigation.navigate("account")  
-                }else{
+                }else if(json.status === 'error'){
                     setLoading(false)
-                    toastRef.current.show(response.message)
+                    toastRef.current.show(json.message)
                 }
-            }
+            })
+            .catch((error) => console.log(error))
         } catch (error) {
             console.log(error)
         }

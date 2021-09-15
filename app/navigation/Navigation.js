@@ -1,5 +1,5 @@
 import React from "react"
-import { NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer, useIsFocused } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Icon } from 'react-native-elements'
 import { StyleSheet } from "react-native"
@@ -24,9 +24,9 @@ export default function App(){
             >
                <Tab.Screen name="restaurants" options={{ title: "Restaurant" }} component={RestaurantsStack} />
                <Tab.Screen name="favorites" options={{ title: "Favorites" }} component={FavoritesStack} />
-               <Tab.Screen name="account" options={{ title: "Account" }} component={AccountStack} />
                <Tab.Screen name="search" options={{ title: "Search" }} component={SearchStack} />
                <Tab.Screen name="top-restaurant" options={{ title: "Top Restaurant" }} component={TopRestaurantsStack} />
+               <Tab.Screen name="account" options={{ title: "Account" }} component={AccountStack} />
             </Tab.Navigator>
         </NavigationContainer>
     )

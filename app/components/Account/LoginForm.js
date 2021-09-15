@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, { useState } from "react"
 import { StyleSheet, View } from "react-native"
 import Loading from "../Loading"
 import { isEmpty, size } from "lodash"
@@ -6,6 +6,7 @@ import { Input, Icon, Button } from "react-native-elements"
 import { validateEmail } from "../../screens/utils/validation"
 import { useNavigation } from "@react-navigation/native"
 import AsyncStorage from '@react-native-async-storage/async-storage'
+
 
 export default function LoginForm(props){
     const [showPassword,setShowPassword] = useState(false)
@@ -17,10 +18,9 @@ export default function LoginForm(props){
 
     let loginUser = async () => {
         try {
-            setLoading(false)
+            setLoading(true)
             const value = await AsyncStorage.getItem('@MySuperStore:666999');
-          
-            let login = await fetch(urlLogin, {
+            await fetch(urlLogin, {
                 method: 'POST',
                 headers: {'X-CSRF-TOKEN': value},
                 body: JSON.stringify({
@@ -29,23 +29,25 @@ export default function LoginForm(props){
                 })
             })
             .then((response) => response.json())
-            .then((json) => json)
-            .catch((error) => console.log(error))
-            let response = await login
-            if(response){
-                if(response.token){
-                    setLoading(false)
-                    _storeToken(response.token)
-                    navigation.navigate('restaurants')
+            .then((responseJSON) => {
+                setLoading(false)
+                if(responseJSON.token){
+                    _storeToken(responseJSON.token)
+                    navigation.navigate('account')
                 }else{
-                    setLoading(false)
-                    toastRef.current.show('Fallo inicio sesión')
+                    toastRef.current.show("Contraseña o correo incorrectos")
                 }
-            }
+            })
+            .catch((error) => {
+                setLoading(false)
+                console.log(error)
+            })
+            r
         } catch (error) {
             console.log(error)
         }
-    }    
+    }  
+    
     
     let _storeToken = async (token) => {
         try{

@@ -7,7 +7,7 @@ export default function UserGuest(){
     const navigation = useNavigation()
  
     return(
-        <ScrollView>
+        <ScrollView centerContent={true} style={styles.viewBody}>
             <Image
                 source={require("../../../assets/img/IMG_9211.jpg")}
                 resizeMode="contain"
@@ -32,8 +32,8 @@ export default function UserGuest(){
 }
 const styles = StyleSheet.create({
     viewBody: {
-        marginLeft: 30,
-        marginTop: 30
+        marginLeft: 1,
+        marginTop: 1
     },
     image: {
         height: 300,

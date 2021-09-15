@@ -7,15 +7,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 export default function Account(){
     const [login, setLogin] = useState(null)
     const urlToken = 'http://192.168.1.5:8000/api/token'
-
+    
     useEffect(() => {
         (async = () => {
             let data = fetch(urlToken).then((response) => response.json()).then((json) => {
                 _storeData(json.token)
             })
             _getToken()        
-
+        
         })()
+        
     }, [])
 
     _storeData = async (appToken) => {
@@ -31,10 +32,10 @@ export default function Account(){
     _getToken = async () => {
         const token = await AsyncStorage.getItem('token')
         const vall = await AsyncStorage.getAllKeys()
+        console.log(vall)
         if(token){
             setLogin(true)
         }else{
-            console.log("se puso falso el login")
             setLogin(false)
         }
     }

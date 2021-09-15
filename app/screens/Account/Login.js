@@ -8,7 +8,7 @@ import LoginForm from "../../components/Account/LoginForm"
 
 export default function Login(){
     const toastRef = useRef();
-
+    
     return(
         <ScrollView>
             <Image 
