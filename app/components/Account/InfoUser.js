@@ -11,7 +11,9 @@ export default function InfoUser(){
                 showEditButton 
                 containerStyle={styles.userInfoAvatar}
             />
-            <Text>Info User</Text>
+            <View>
+                <Text>Info User</Text>
+            </View>
         </View>
     )
     
