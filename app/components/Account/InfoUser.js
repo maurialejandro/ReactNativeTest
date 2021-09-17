@@ -2,7 +2,11 @@ import React from "react"
 import { StyleSheet, View, Text } from "react-native"
 import { Avatar } from "react-native-elements"
 
-export default function InfoUser(){
+export default function InfoUser(props){
+    const { 
+        userInfo: { photoURL, name, email, exp }
+    } = props
+
     return (
         <View style={styles.viewUserInfo} >
             <Avatar 
@@ -10,9 +14,12 @@ export default function InfoUser(){
                 size="large"
                 showEditButton 
                 containerStyle={styles.userInfoAvatar}
+                source={ photoURL ? { uri: photoURL } : require("../../../assets/img/avatar2.png") }
             />
             <View>
-                <Text>Info User</Text>
+                <Text> {email} </Text>
+                <Text> {name} </Text>
+                <Text> {exp} </Text>
             </View>
         </View>
     )
@@ -29,6 +36,7 @@ const styles = StyleSheet.create({
         paddingBottom: 30    
     },
     userInfoAvatar: {
-        marginRight:20
+        marginRight:20,
+        backgroundColor: "#C2751A"
     }
 })

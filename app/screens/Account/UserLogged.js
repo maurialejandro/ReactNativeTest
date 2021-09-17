@@ -13,13 +13,13 @@ export default function UserLogged(){
     const [loading, setLoading] = useState(false)
     const [loadingText, setLoadingText] = useState("")
     const navigation = useNavigation()
-    const urlInfo = 'http://192.168.1.5:8000/api/info-user'
+    const urlInfo = 'http://192.168.1.108:8000/api/info-user'
 
     useEffect(() => {
         (async = () => {
-        
+            _getData()
         })()
-    })
+    },[])
 
     let logout = async () => {
         try{
@@ -69,7 +69,6 @@ export default function UserLogged(){
 }
 const styles = StyleSheet.create({
     viewUserInfo: {
-        
         minHeight: "100%",
         backgroundColor: "#f2f2f2"
     },
