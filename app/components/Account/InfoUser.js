@@ -1,18 +1,29 @@
 import React from "react"
 import { StyleSheet, View, Text } from "react-native"
-import { Avatar } from "react-native-elements"
-
+import { Avatar, Icon } from "react-native-elements"
+ 
 export default function InfoUser(props){
     const { 
         userInfo: { photoURL, name, email, exp }
     } = props
 
+    const changeAvatar = () => {
+        console.log("change avatar")
+    }
+
+    console.log("falta agregar el edit button al avatar no se muestra el icon")
     return (
         <View style={styles.viewUserInfo} >
             <Avatar 
                 rounded
                 size="large"
-                showEditButton 
+                editButton={<Icon 
+                        name='account-adit'
+                        type='material-community'
+                        color='#f50'
+                        onPress={() => console.log('hello')}
+                    />}
+                onEditPress={changeAvatar}
                 containerStyle={styles.userInfoAvatar}
                 source={ photoURL ? { uri: photoURL } : require("../../../assets/img/avatar2.png") }
             />
