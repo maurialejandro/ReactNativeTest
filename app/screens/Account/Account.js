@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function Account(){
     const [login, setLogin] = useState(null)
-    const urlToken = 'http://192.168.1.108:8000/api/token'
+    const urlToken = 'http://192.168.0.7:8000/api/token'
     
     useEffect(() => {
         (async = () => {
@@ -29,6 +29,7 @@ export default function Account(){
         }
     };
     _getToken = async () => {
+        console.log("aqui hay que ver que pasa cuando el token expira, manejar errores")
         const token = await AsyncStorage.getItem('token')
         const vall = await AsyncStorage.getAllKeys()
         console.log(vall)

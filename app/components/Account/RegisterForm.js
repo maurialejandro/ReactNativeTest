@@ -14,7 +14,7 @@ export default function RegisterForm(props){
     const [formData, setFormData] = useState(defaultFormValues())
     const navigation = useNavigation()
     const [loading, setLoading] = useState(false)
-    const urlRegister = 'http://192.168.1.108:8000/api/register'
+    const urlRegister = 'http://192.168.0.7:8000/api/register'
 
     let registerUser = async () => {
         try {

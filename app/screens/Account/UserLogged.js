@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from "react";
-import { StyleSheet, View, Text, AppRegistry } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { Button } from "react-native-elements"
 import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-easy-toast"
@@ -13,7 +13,7 @@ export default function UserLogged(){
     const [loading, setLoading] = useState(false)
     const [loadingText, setLoadingText] = useState("")
     const navigation = useNavigation()
-    const urlInfo = 'http://192.168.1.108:8000/api/info-user'
+    const urlInfo = 'http://192.168.0.7:8000/api/info-user'
 
     useEffect(() => {
         (async = () => {
@@ -54,7 +54,7 @@ export default function UserLogged(){
     }
     return(
         <View style={styles.viewUserInfo}>
-            {userInfo && <InfoUser userInfo={userInfo} />} 
+            {userInfo && <InfoUser toastRef={toastRef} userInfo={userInfo} />} 
             <Text>AccountOptioms</Text>
             <Button 
                 title="Cerrar sesión" 
