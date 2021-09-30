@@ -13,7 +13,7 @@ export default function UserLogged(){
     const [loading, setLoading] = useState(false)
     const [loadingText, setLoadingText] = useState("")
     const navigation = useNavigation()
-    const urlInfo = 'http://192.168.0.7:8000/api/info-user'
+    const urlInfo = 'http://192.168.1.5:8000/api/info-user'
 
     useEffect(() => {
         (async = () => {

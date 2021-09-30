@@ -13,7 +13,7 @@ export default function LoginForm(props){
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState(defaultFormValues())
     const {toastRef} = props 
-    const urlLogin = 'http://192.168.0.7:8000/api/login'
+    const urlLogin = 'http://192.168.1.5:8000/api/login'
     const navigation = useNavigation()
     
     let loginUser = async () => {
