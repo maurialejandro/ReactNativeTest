@@ -13,7 +13,8 @@ export default function Account(){
             let data = fetch(urlToken).then((response) => response.json()).then((json) => {
                 _storeData(json.token)
             })
-            _getToken()        
+                   
+            _getToken()
         
         })()
     }, [])
@@ -32,7 +33,6 @@ export default function Account(){
         console.log("aqui hay que ver que pasa cuando el token expira, manejar errores")
         const token = await AsyncStorage.getItem('token')
         const vall = await AsyncStorage.getAllKeys()
-        console.log(vall)
         if(token){
             setLogin(true)
         }else{

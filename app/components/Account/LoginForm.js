@@ -20,29 +20,32 @@ export default function LoginForm(props){
         try {
             setLoading(true)
             const value = await AsyncStorage.getItem('@MySuperStore:666999');
-            await fetch(urlLogin, {
-                method: 'POST',
-                headers: {'X-CSRF-TOKEN': value},
-                body: JSON.stringify({
-                    email: formData.email,
-                    password: formData.password
+            ( async = () => {
+                let data = fetch(urlLogin, {
+                    method: 'POST',
+                    headers: {'Content-Type' : 'application/json', 'X-CSRF-TOKEN': value},
+                    body: JSON.stringify({
+                        email: formData.email,
+                        password: formData.password
+                    })
                 })
-            })
-            .then((response) => response.json())
-            .then((responseJSON) => {
-                setLoading(false)
-                if(responseJSON.token){
-                    _storeToken(responseJSON.token)
-                    console.log('se hizo login satisfactoriamente')
-                    navigation.navigate('account')
-                }else{
-                    toastRef.current.show("Contraseña o correo incorrectos")
-                }
-            })
-            .catch((error) => {
-                setLoading(false)
-                console.log(error)
-            })
+                .then((response) => response.json())
+                .then((responseJSON) => {
+                    setLoading(false)
+                    if(responseJSON.token){
+                        _storeToken(responseJSON.token)
+                        console.log('se hizo login satisfactoriamente')
+                        navigation.navigate('account')
+                    }else{
+                        toastRef.current.show("Contraseña o correo incorrectos")
+                    }
+                })
+                .catch((error) => {
+                    setLoading(false)
+                    console.log(error)
+                })
+            })()
+            
             
         } catch (error) {
             console.log(error)

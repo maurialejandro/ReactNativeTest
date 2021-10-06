@@ -36,7 +36,7 @@ export default function UserLogged(){
         if(token && appToken){
             await fetch(urlInfo, {
                 method: 'POST',
-                headers: {'X-CSRF-TOKEN': appToken},
+                headers: { 'Content-type': 'application/json', 'X-CSRF-TOKEN': appToken},
                 body: JSON.stringify({
                     'token': token
                 })
