@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import Loading from "../Loading"
 import { isEmpty, size } from "lodash"
@@ -13,7 +13,7 @@ export default function LoginForm(props){
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState(defaultFormValues())
     const {toastRef} = props 
-    const urlLogin = 'http://192.168.1.5:8000/api/login'
+    const urlLogin = 'http://192.168.1.108:8000/api/login'
     const navigation = useNavigation()
     
     let loginUser = async () => {
@@ -31,12 +31,15 @@ export default function LoginForm(props){
                 })
                 .then((response) => response.json())
                 .then((responseJSON) => {
-                    setLoading(false)
                     if(responseJSON.token){
+                        setLoading(false)
                         _storeToken(responseJSON.token)
-                        console.log('se hizo login satisfactoriamente')
-                        navigation.navigate('account')
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'account' }]
+                        })
                     }else{
+                        setLoading(false)
                         toastRef.current.show("Contraseña o correo incorrectos")
                     }
                 })
@@ -45,8 +48,6 @@ export default function LoginForm(props){
                     console.log(error)
                 })
             })()
-            
-            
         } catch (error) {
             console.log(error)
         }

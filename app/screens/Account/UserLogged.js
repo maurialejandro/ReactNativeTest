@@ -13,7 +13,7 @@ export default function UserLogged(){
     const [loading, setLoading] = useState(false)
     const [loadingText, setLoadingText] = useState("")
     const navigation = useNavigation()
-    const urlInfo = 'http://192.168.1.5:8000/api/info-user'
+    const urlInfo = 'http://192.168.1.108:8000/api/info-user'
 
     useEffect(() => {
         (async = () => {
@@ -24,7 +24,10 @@ export default function UserLogged(){
     let logout = async () => {
         try{
             await AsyncStorage.removeItem('token')
-            navigation.navigate('account')
+            navigation.reset({
+                index: 0,
+                routes: [{name: 'account'}]
+            })
         }catch (error) {
             console.log(error)
         }
@@ -43,6 +46,7 @@ export default function UserLogged(){
             })
             .then((response) => response.json())
             .then((responseJSON) => {
+                    console.log(responseJSON)
                     if(responseJSON){
                         setUserInfo(responseJSON)
                     }

@@ -1,5 +1,5 @@
 import React from "react"
-import { NavigationContainer, useIsFocused } from '@react-navigation/native'
+import { NavigationContainer} from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Icon } from 'react-native-elements'
 import { StyleSheet } from "react-native"
@@ -17,7 +17,6 @@ export default function App(){
         <NavigationContainer>
             <Tab.Navigator 
                 initialRouteName="account"
-                style={styles.tabBarOptions}
                 screenOptions={({route}) => ({
                     tabBarIcon: ({color}) => screenOptions(route, color),
                 })}

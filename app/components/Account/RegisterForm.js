@@ -14,7 +14,7 @@ export default function RegisterForm(props){
     const [formData, setFormData] = useState(defaultFormValues())
     const navigation = useNavigation()
     const [loading, setLoading] = useState(false)
-    const urlRegister = 'http://192.168.1.5:8000/api/register'
+    const urlRegister = 'http://192.168.1.108:8000/api/register'
 
     let registerUser = async () => {
         try {
@@ -35,7 +35,10 @@ export default function RegisterForm(props){
                 if(json.status === 'success' && json.message === 'User creado' ){
                     setLoading(false)
                     toastRef.current.show(json.message)
-                    navigation.goBack()
+                    navigation.reset({
+                        index: 0,
+                        routes: { name: 'account' }
+                    })
                 }else if(json.status === 'error'){
                     setLoading(false)
                     toastRef.current.show(json.message)
