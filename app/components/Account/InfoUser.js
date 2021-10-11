@@ -8,16 +8,19 @@ import * as ImageManipulator from 'expo-image-manipulator'
 
 export default function InfoUser(props){
     const { 
-        userInfo: { name, email, exp }
+        userInfo: { avatar, name, email, exp }
     } = props
-    const [photoURL, setPhotoURL] = useState(null)
-    const urlAvatar = "http://192.168.1.108:8000/api/store-avatar"
-    const urlGetAvatar = "http://192.168.1.108:8000/api/get-avatar"
-    
-    useEffect(() => {
-        getAvatar()
-    },[])
+    const { toastRef } = props
 
+    const [photoURL, setPhotoURL] = useState(null)
+    const urlAvatar = "http://192.168.1.5:8000/api/store-avatar"
+    
+    useEffect(()=> {
+        console.log("solucionar errores de toastRef")
+        if(avatar){
+            setPhotoURL(`http://192.168.1.5:8000/api/get-avatar/${avatar}`)
+        }
+    }, [])
     const changeAvatar = async () => {
         const resultPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL)
         const resultPermissionCamera = resultPermission.permissions.mediaLibrary.status
@@ -70,9 +73,9 @@ export default function InfoUser(props){
         })
         .then((response) => response.json())
         .then((responseJSON) => {
-            toastRef.current.show('Imagen subida sitisfactoriamente')
+            toastRef.current.show('Imagen subida sitisfactoriamente') 
             if(responseJSON.status === "success"){
-                getAvatar()
+                setPhotoURL(`http://192.168.1.5:8000/api/get-avatar/${responseJSON.avatar}`)
             }
         })
         .catch((error) => {
@@ -80,24 +83,7 @@ export default function InfoUser(props){
         })
     }
 
-    const getAvatar = async () => {
-        const value = await AsyncStorage.getItem('@MySuperStore:666999')
-        const token = await AsyncStorage.getItem("token")  
-        await fetch(urlGetAvatar, {
-            method: 'POST',
-            headers: {'Content-type' : 'image/jpeg', 'X-CSRF-TOKEN' : value},
-            body: JSON.stringify({
-                'token' : token
-            })
-        })
-        .then(response => {
-            //setPhotoURL(response)
-        })
-        .catch((error) => {
-            console.log(error)
-        })    
-    }
-
+    
     return (
         <View style={styles.viewUserInfo} >
             <Avatar 
