@@ -1,11 +1,12 @@
-import React, {useState, useRef, useEffect} from "react";
-import { StyleSheet, View, Text } from "react-native";
+import React, {useState, useRef, useEffect} from "react"
+import { StyleSheet, View, Text } from "react-native"
 import { Button } from "react-native-elements"
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native"
 import Toast from "react-native-easy-toast"
 import Loading from "../../components/Loading"
 import InfoUser from "../../components/Account/InfoUser"
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import AccountOptions from "../../components/Account/AccountOptions"
 
 export default function UserLogged(){
     const toastRef = useRef()
@@ -13,7 +14,7 @@ export default function UserLogged(){
     const [loading, setLoading] = useState(false)
     const [loadingText, setLoadingText] = useState("")
     const navigation = useNavigation()
-    const urlInfo = 'http://192.168.1.5:8000/api/info-user'
+    const urlInfo = 'http://192.168.0.7:8000/api/info-user'
 
     useEffect(() => {
         (async = () => {
@@ -57,8 +58,14 @@ export default function UserLogged(){
     }
     return(
         <View style={styles.viewUserInfo}>
-            {userInfo && <InfoUser toastRef={toastRef} userInfo={userInfo} />} 
-            <Text>AccountOptioms</Text>
+            {userInfo && <InfoUser 
+                            toastRef={toastRef} 
+                            userInfo={userInfo} 
+                            setLoading={setLoading}
+                            setLoadingText={setLoadingText}
+                        />}
+                         
+            <AccountOptions userInfo={userInfo} toastRef={toastRef} />
             <Button 
                 title="Cerrar sesión" 
                 onPress={() => logout()} 

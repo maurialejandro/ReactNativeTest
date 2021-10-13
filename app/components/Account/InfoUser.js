@@ -8,17 +8,18 @@ import * as ImageManipulator from 'expo-image-manipulator'
 
 export default function InfoUser(props){
     const { 
-        userInfo: { avatar, name, email, exp }
+        userInfo: { avatar, name, email, exp},
+        toastRef,
+        setLoading,
+        setLoadingText
     } = props
-    const { toastRef } = props
 
     const [photoURL, setPhotoURL] = useState(null)
-    const urlAvatar = "http://192.168.1.5:8000/api/store-avatar"
-    
+    const urlAvatar = "http://192.168.0.7:8000/api/store-avatar"
+   
     useEffect(()=> {
-        console.log("solucionar errores de toastRef")
         if(avatar){
-            setPhotoURL(`http://192.168.1.5:8000/api/get-avatar/${avatar}`)
+            setPhotoURL(`http://192.168.0.7:8000/api/get-avatar/${avatar}`)
         }
     }, [])
     const changeAvatar = async () => {
@@ -53,6 +54,9 @@ export default function InfoUser(props){
     }
 
     const uploadImage = async (uri) => {
+        
+        setLoadingText("Subiendo imagen")
+        setLoading(true)
         let formData = new FormData()
         const response = await fetch(uri)
         const blob = await response.blob()
@@ -73,13 +77,15 @@ export default function InfoUser(props){
         })
         .then((response) => response.json())
         .then((responseJSON) => {
-            toastRef.current.show('Imagen subida sitisfactoriamente') 
+            toastRef.current.show('Imagen subida satisfactoriamente') 
             if(responseJSON.status === "success"){
                 setPhotoURL(`http://192.168.1.5:8000/api/get-avatar/${responseJSON.avatar}`)
             }
+            setLoading(false)
         })
         .catch((error) => {
             console.log(error)
+            setLoading(false)
         })
     }
 
