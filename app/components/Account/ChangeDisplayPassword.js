@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useState } from "react"
 import { StyleSheet, View, Text } from "react-native"
 import { Input, Button } from "react-native-elements"
-
+import { useNavigation } from "@react-navigation/native"
 export default function ChangeDisplayPassword(props){
     const { setShowModal, toastRef } = props
     const [ oldPass, setOldPass ] = useState(null)
@@ -11,6 +11,7 @@ export default function ChangeDisplayPassword(props){
     const [error, setError] = useState(null)
     const urlUpdateProfilePass = 'http://192.168.0.7:8000/api/update-profile-pass'
     const [isLoading, setIsLoading] = useState(false)
+    const navigation = useNavigation()
 
     const onSubmit = async () => {
         setError(null)
@@ -36,6 +37,11 @@ export default function ChangeDisplayPassword(props){
                 setShowModal(false)
                 if(responseJSON.status === 'success'){
                     setIsLoading(false)
+                    AsyncStorage.removeItem('token')
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'account' }]
+                    })
                 }else{
                     setError("Error al altualizar contraseña")
                     setIsLoading(false)
