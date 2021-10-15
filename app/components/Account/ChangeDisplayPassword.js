@@ -3,30 +3,46 @@ import React, { useState } from "react"
 import { StyleSheet, View, Text } from "react-native"
 import { Input, Button } from "react-native-elements"
 import { useNavigation } from "@react-navigation/native"
+import { size } from "lodash"
+
 export default function ChangeDisplayPassword(props){
     const { setShowModal, toastRef } = props
-    const [ oldPass, setOldPass ] = useState(null)
-    const [ newPass, setNewPass ] = useState(null)
-    const [ resetNewPass, setResetNewPass ] = useState(null)
-    const [error, setError] = useState(null)
+    const [error, setError] = useState({})
     const urlUpdateProfilePass = 'http://192.168.0.7:8000/api/update-profile-pass'
     const [isLoading, setIsLoading] = useState(false)
     const navigation = useNavigation()
+    const [ form, setForm ] = useState(defaultValues())
+    const [ showPassword, setShowPassword ] = useState(false)
 
     const onSubmit = async () => {
-        setError(null)
-        if(!newPass && oldPass && resetNewPass){
-            setError("El campo contraseña no puede estar vacio")
-        } else if(newPass !== resetNewPass){
-            setError('Las contraseñas deben ser iguales')
+        let isSetError = true
+        setError({})
+        let errorsTemp = {}
+
+        if(!form.newPass || !form.pass || !form.repeatNewPass){
+            errorsTemp = {
+                pass: !form.pass ? "La contraseña no puede estar vacia" : "",
+                newPass: !form.newPass ? "La contraseña no puede estar vacia": "",
+                repeatNewPass: !form.repeatNewPass? "La contraseña no puede estar vacia": ""
+            }
+        } else if (form.newPass !== form.repeatNewPass){
+            errorsTemp = {
+                newPass : "Las conteaseñas no son iguales",
+                repeatNewPass: "Las contraseñas no son iguales"
+            }
+        }else if(size(form.newPass) < 6){
+            errorsTemp={
+                newPass: "La contraseña debe tener mas de 6 caracteres",
+                repeatNewPass: "La contraseña debe tener mas de 6 caracteres"
+            }
         }else{    
             setIsLoading(true)
             const value = await AsyncStorage.getItem('@MySuperStore:666999')
             const token = await AsyncStorage.getItem('token')
             const formData = new FormData()
             formData.append('token', token)
-            formData.append('pass', newPass)
-            formData.append('passOld', oldPass)
+            formData.append('pass', form.newPass)
+            formData.append('passOld', form.pass)
             fetch(urlUpdateProfilePass, {
                 method: 'POST',
                 headers: { 'Content-Type' : 'multipart/form-data', 'X-CSRF-TOKEN' : value },
@@ -34,26 +50,38 @@ export default function ChangeDisplayPassword(props){
             })
             .then((response) => response.json())
             .then((responseJSON) => {
-                setShowModal(false)
                 if(responseJSON.status === 'success'){
+                    isSetError = false
                     setIsLoading(false)
+                    setShowModal(false)
                     AsyncStorage.removeItem('token')
                     navigation.reset({
                         index: 0,
                         routes: [{ name: 'account' }]
                     })
+                }else if (responseJSON.message === "Ingresar contraseña correcta"){
+                    errorsTemp={
+                        pass: "Ingresar contraseña correcta",
+                    }
                 }else{
-                    setError("Error al altualizar contraseña")
-                    setIsLoading(false)
+                    isSetError && setError("Error al altualizar contraseña")
+                    isSetError && setIsLoading(false)
                 }
+                isSetError && setError(errorsTemp)
             })
             .catch((error) => {
                 console.log(error)
-                setError("Error al actualizar contraseña")
-                setIsLoading(false)
+                isSetError && setError("Error al actualizar contraseña")
+                isSetError && setIsLoading(false)
             })
         }
+        isSetError && setError(errorsTemp)
     }
+
+    const onChange = (e, type) => {
+        setForm({...form, [type]: e.nativeEvent.text})
+    }
+ 
     return (
         <View>
             <Input 
@@ -64,8 +92,16 @@ export default function ChangeDisplayPassword(props){
                     name:"key",
                     color: "#c2c2c2"                    
                 }}
-                onChange={ e => setOldPass(e.nativeEvent.text) }
-                errorMessage={error}
+                rightIcon={{
+                    type: "material-community",
+                    name:  showPassword ? "eye-off-outline" : "eye-outline" ,
+                    color: "#c2c2c2",
+                    onPress: () => setShowPassword(!showPassword)
+                }}
+                password={true}
+                secureTextEntry={showPassword ? true : false}
+                onChange={ e => onChange(e, "pass") }
+                errorMessage={error.pass}
             />
             <Input 
                 placeholder="Nueva contraseña"
@@ -75,8 +111,16 @@ export default function ChangeDisplayPassword(props){
                     name:"lock-reset",
                     color: "#c2c2c2"                    
                 }}
-                onChange={ e => setNewPass(e.nativeEvent.text) }
-                errorMessage={error}
+                rightIcon={{
+                    type: "material-community",
+                    name:  showPassword ? "eye-off-outline" : "eye-outline" ,
+                    color: "#c2c2c2",
+                    onPress: () => setShowPassword(!showPassword)
+                }}
+                password={true}
+                secureTextEntry={showPassword ? true : false}
+                onChange={ e => onChange(e, "newPass") }
+                errorMessage={error.newPass}
             />
 
             <Input 
@@ -87,8 +131,16 @@ export default function ChangeDisplayPassword(props){
                     name:"lock-reset",
                     color: "#c2c2c2"                    
                 }}
-                onChange={ e => setResetNewPass(e.nativeEvent.text) }
-                errorMessage={error}
+                rightIcon={{
+                    type: "material-community",
+                    name:  showPassword ? "eye-off-outline" : "eye-outline",
+                    color: "#c2c2c2",
+                    onPress: () => setShowPassword(!showPassword)
+                }}
+                password={true}
+                secureTextEntry={showPassword ? true : false}
+                onChange={ e => onChange(e, "repeatNewPass") }
+                errorMessage={error.repeatNewPass}
             />
 
             <Button 
@@ -102,7 +154,13 @@ export default function ChangeDisplayPassword(props){
         </View>
     )
 }
-
+function defaultValues(){
+    return{
+        pass: "",
+        newPass: "",
+        repeatNewPass: ""
+    }
+}
 const styles = StyleSheet.create({
     input: {
         marginBottom: 10

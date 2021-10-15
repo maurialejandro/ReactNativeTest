@@ -76,7 +76,7 @@ function generateOptions(selectComponent){
             onPress: () => selectComponent("email"),
         },
         {
-            title: "Cambiar constraseña",
+            title: "Cambiar contraseña",
             iconType: "material-community",
             iconNameLeft: "lock-reset",
             iconColorLeft: "#ccc",

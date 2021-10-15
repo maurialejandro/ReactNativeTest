@@ -7,25 +7,25 @@ import { useNavigation } from "@react-navigation/native"
 
 export default function ChangeDisplayEmail(props){
     const { displayEmail, setShowModal, toastRef } = props
-    const [ newDisplayEmail, setNewDisplayEmail ] = useState(null)
-    const [ pass, setPass ] = useState(null)
 
     const [error, setError] = useState(null)
     const [errorPass, setErrorPass] = useState(null)
     const urlUpdateProfileEmail = 'http://192.168.0.7:8000/api/update-profile-email'
     const [isLoading, setIsLoading] = useState(false)
     const navigation = useNavigation()
+    const [ form, setForm ] = useState(defaultValues())
+    const [showPassword, setShowPassword] = useState(false)
 
     const onSubmit = async () => {
         setErrorPass(null)
         setError(null)
-        if(!newDisplayEmail){
-            setError("Email no modificado")
-        } else if(displayEmail === newDisplayEmail){
-            setError("El Email no puede ser el mismo")
-        } else if(!validateEmail(newDisplayEmail)){
-            setError("Email incorrecto")
-        } else if(!pass){    
+        if(!form.email){
+            setError('Email no modificado')
+        } else if(displayEmail === form.email){
+            setError('El Email no puede ser el mismo')
+        } else if(!validateEmail(form.email)){
+            setError('Email incorrecto')
+        } else if(!form.pass){    
             setErrorPass('Contraseña no puede estar vacia')   
         }else{
             setIsLoading(true)
@@ -33,8 +33,8 @@ export default function ChangeDisplayEmail(props){
             const token = await AsyncStorage.getItem('token')
             const formData = new FormData()
             formData.append('token', token)
-            formData.append('email', newDisplayEmail)
-            formData.append('pass', pass)
+            formData.append('email', form.email)
+            formData.append('pass', form.pass)
             fetch(urlUpdateProfileEmail, {
                 method: 'POST',
                 headers: { 'Content-Type' : 'multipart/form-data', 'X-CSRF-TOKEN' : value },
@@ -57,23 +57,24 @@ export default function ChangeDisplayEmail(props){
 
                 }else if(responseJSON.message === 'Error email ya registrado'){
                     setIsLoading(false)
-                    setError("Email ya registrado")
+                    setError('Email ya registrado')
                 } else if(responseJSON.message === 'Error al obtene usuario'){
                     setIsLoading(false)
-                    setErrorPass("Contraseña incorrecta")
+                    setErrorPass('Contraseña incorrecta')
                 } else {
                     console.log(responseJSON)
                     setIsLoading(false)
-                    setError("Error al altualizar Email")
+                    setError('Error al altualizar Email')
                 }
             })
             .catch((error) => {
                 setIsLoading(false)
                 console.log(error)  
-                setError("Error al actualizar el Email")
+                setError('Error al actualizar el Email')
             })
         }
     }
+    
     let _storeToken = async (token) => {
         try{
             await AsyncStorage.setItem('token', token)
@@ -81,6 +82,11 @@ export default function ChangeDisplayEmail(props){
             console.log(error)
         }
     }
+
+    const onChange = (e, type) => {
+        setForm({...form, [type]: e.nativeEvent.text})
+    }
+
     return (
         <View>
             <Input 
@@ -92,7 +98,7 @@ export default function ChangeDisplayEmail(props){
                     color: "#c2c2c2"                    
                 }}
                 defaultValue={displayEmail || ""}
-                onChange={ e => setNewDisplayEmail(e.nativeEvent.text) }
+                onChange={ e => onChange(e, "email") }
                 errorMessage={error}
             />
             <Input 
@@ -102,9 +108,16 @@ export default function ChangeDisplayEmail(props){
                     type:"material-community",
                     name:"key",
                     color: "#c2c2c2"                    
-                }}
+                }} 
+                rightIcon={{ 
+                    type: "material-community",
+                    name: showPassword ? "eye-off-outline" : "eye-outline",
+                    color: "#c2c2c2",
+                    onPress: () => setShowPassword(!showPassword)
+                 }}
+                secureTextEntry={showPassword ? false : true }
                 defaultValue={""}
-                onChange={ e => setPass(e.nativeEvent.text) }
+                onChange={ e => onChange(e, "pass") }
                 errorMessage={errorPass}
             />
             <Button 
@@ -117,6 +130,13 @@ export default function ChangeDisplayEmail(props){
 
         </View>
     )
+}
+ 
+function defaultValues(){
+    return{
+        email: '',
+        pass: ''
+    }
 }
 
 const styles = StyleSheet.create({
