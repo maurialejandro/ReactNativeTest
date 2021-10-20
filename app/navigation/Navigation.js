@@ -3,11 +3,11 @@ import { NavigationContainer} from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Icon } from 'react-native-elements'
 import { StyleSheet } from "react-native"
-import RestaurantsStack from "./RestaurantsStack"
+import PlatosStack from "./PlatosStack"
 import FavoritesStack from "./FavoritesStack"
 import AccountStack from "./AccountStack"
 import SearchStack from "./SearchStack"
-import TopRestaurantsStack from "./TopRestaurantStack"
+import TopPlatosStack from "./TopPlatosStack"
 
 const Tab = createBottomTabNavigator();
 
@@ -21,10 +21,10 @@ export default function App(){
                     tabBarIcon: ({color}) => screenOptions(route, color),
                 })}
             >
-               <Tab.Screen name="restaurants" options={{ title: "Restaurant" }} component={RestaurantsStack} />
+               <Tab.Screen name="platos" options={{ title: "Platos" }} component={PlatosStack} />
                <Tab.Screen name="favorites" options={{ title: "Favorites" }} component={FavoritesStack} />
                <Tab.Screen name="search" options={{ title: "Search" }} component={SearchStack} />
-               <Tab.Screen name="top-restaurant" options={{ title: "Top Restaurant" }} component={TopRestaurantsStack} />
+               <Tab.Screen name="top-platos" options={{ title: "Top Platos" }} component={TopPlatosStack} />
                <Tab.Screen name="account" options={{ title: "Account" }} component={AccountStack} />
             </Tab.Navigator>
         </NavigationContainer>
@@ -40,13 +40,13 @@ function screenOptions(route, color){
     let iconName;
 
     switch (route.name) {
-        case "restaurants":
+        case "platos":
             iconName = "compass-outline"
             break;
         case "favorites":
             iconName = "heart-outline"
             break;    
-        case "top-restaurant":
+        case "top-platos":
             iconName = "star-outline"
             break;
         case "account":

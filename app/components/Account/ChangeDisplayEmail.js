@@ -71,6 +71,7 @@ export default function ChangeDisplayEmail(props){
                 setIsLoading(false)
                 console.log(error)  
                 setError('Error al actualizar el Email')
+                AsyncStorage.removeItem('token')
             })
         }
     }

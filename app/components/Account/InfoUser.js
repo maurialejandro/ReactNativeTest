@@ -16,12 +16,12 @@ export default function InfoUser(props){
 
     const [photoURL, setPhotoURL] = useState(null)
     const urlAvatar = "http://192.168.0.7:8000/api/store-avatar"
-   
-    useEffect(()=> {
+    useEffect(()=>{
         if(avatar){
             setPhotoURL(`http://192.168.0.7:8000/api/get-avatar/${avatar}`)
+            console.log(photoURL)
         }
-    }, [])
+    },[])
     const changeAvatar = async () => {
         const resultPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL)
         const resultPermissionCamera = resultPermission.permissions.mediaLibrary.status
@@ -37,16 +37,17 @@ export default function InfoUser(props){
             if(result.cancelled){
                 toastRef.current.show("Has cerrado los permisos de la galeria")
             }else{
-                resizeImageManipulator(result.uri)
+                resizeImageManipulator(result)
             }
         }
     }
 
-    const resizeImageManipulator = async (uri) => {
+    const resizeImageManipulator = async (result) => {
+
         const file = await ImageManipulator.manipulateAsync(
-            uri,
+            result.uri,
             [
-                {resize : {width: 1440, height:1320}}
+                {resize : {width: result.width * 0.5 , height: result.height * 0.5}}
             ],
             { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }
         )
@@ -76,15 +77,17 @@ export default function InfoUser(props){
             body: formData
         })
         .then((response) => response.json())
-        .then((responseJSON) => {
-            toastRef.current.show('Imagen subida satisfactoriamente') 
+        .then(async (responseJSON) => {
+            console.log(responseJSON)
             if(responseJSON.status === "success"){
-                setPhotoURL(`http://192.168.1.5:8000/api/get-avatar/${responseJSON.avatar}`)
+                await setPhotoURL(`http://192.168.0.7:8000/api/get-avatar/${responseJSON.avatar}`)
+                toastRef.current.show('Imagen subida satisfactoriamente') 
             }
             setLoading(false)
         })
         .catch((error) => {
             console.log(error)
+            AsyncStorage.removeItem('token')
             setLoading(false)
         })
     }

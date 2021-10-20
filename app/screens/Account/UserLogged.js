@@ -52,6 +52,11 @@ export default function UserLogged(){
                     }
             })
             .catch((error) => {
+                AsyncStorage.removeItem('token')
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'account' }]
+                })
                 console.log(error)
             })
         }
