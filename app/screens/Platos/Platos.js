@@ -12,7 +12,7 @@ export default function Platos(props){
             getData()
         }))()
     },[])
-    console.log(props)
+    // A subir el plato con su imagen usando image manupulator
     let getData = async () => {
         const value = await AsyncStorage.getItem('@MySuperStore:666999')
         const token = await AsyncStorage.getItem('token')

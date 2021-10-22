@@ -31,6 +31,7 @@ export default function AccountOptions(props){
         }
     }
     const menuOptions = generateOptions(selectComponent)
+
     const [showModal, setShowModal] = useState(false)
     const [renderComponent, setRenderComponent] = useState(null)
 
