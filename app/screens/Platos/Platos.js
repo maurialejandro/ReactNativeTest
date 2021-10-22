@@ -28,7 +28,6 @@ export default function Platos(props){
         .then((responseJSON) => {
                 if(responseJSON){
                     setUser(responseJSON)
-                    console.log(responseJSON)
                 }
         })
         .catch((error) => {

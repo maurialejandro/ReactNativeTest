@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Alert, Text, ScrollView, Dimensions } from 'react-native'
 import { Icon, Avatar, Image, Input, Button } from 'react-native-elements'
 import { size, filter } from "lodash"
@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Permissions from "expo-permissions"
 import * as ImagePicker from "expo-image-picker"
 import * as ImageManipulator from 'expo-image-manipulator'
+import * as Location from "expo-location"
+import MapView from 'react-native-maps'
 import Modal from "../../components/Account/Modal"
 
 const widthScreen = Dimensions.get("window").width
@@ -19,55 +21,78 @@ export default function AddPlatoForm(props){
     const [files, setFiles] = useState([])
     const urlStorePlato = 'http://192.168.0.7:8000/api/store-platos'
     const [isVisibleMap, setIsVisibleMap] = useState(false)
-  
+    const [locationPlato, setLocationPlato] = useState(null)
+
     const addPlato = async () => {
-        if(plato === "" ||  price === "" || description === "" || files === "" || !files){
+        if( !plato || !price || !description ){
             toastRef.current.show("¿Falto agregar algun campo?")
-        }else{
-            const token = await AsyncStorage.getItem('token')
-            const value = await AsyncStorage.getItem('@MySuperStore:666999')
-            const response = await fetch(files)
-            const blob = await response.blob()
-            const formData = new FormData()
-            formData.append('name', plato)
-            formData.append('price', price)
-            formData.append('description', description)
-            formData.append('token', token)
-            formData.append('image',{
-                file: blob,
-                uri: Platform.OS === "ios" ? files.replace('file://', '') : files,
-                type: blob.type,
-                size: blob.size,
-                name: blob._data.name
-            })
-            fetch( urlStorePlato ,{
-                method: 'POST',
-                headers: {'Content-type' : 'application/form-data', 'X-CSRF-TOKEN' : value},
-                body: formData
-            })
-            .then((response) => response.json())
-            .then((responseJSON) => {
-                console.log(JSON.stringify(responseJSON))
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+        }else if(size(files) === 0){
+            toastRef.current.show("El plato tiene que terner al menos una imagen")
+        }else if(!locationPlato){
+            toastRef.current.show("Debe localizar donde se encuentra el plato en el mapa")
+        }else{    
+
+            updateImage()
+            //const token = await AsyncStorage.getItem('token')
+            //const value = await AsyncStorage.getItem('@MySuperStore:666999')
+            //const formData = new FormData()
+            //formData.append('name', plato)
+            //formData.append('price', price)
+            //formData.append('description', description)
+            //formData.append('latitude', locationPlato.latitude)
+            //formData.append('longitude', locationPlato.longitude)
+            //formData.append('token', token)
+//
+            //fetch( urlStorePlato ,{
+            //    method: 'POST',
+            //    headers: {'Content-type' : 'application/form-data', 'X-CSRF-TOKEN' : value},
+            //    body: formData
+            //})
+            //.then((response) => response.json())
+            //.then((responseJSON) => {
+            //    console.log(JSON.stringify(responseJSON))
+            //})
+            //.catch((error) => {
+            //    console.log(error)
+            //})
         }
     }
+    
+    const updateImage = async () => {
+        console.log(files)
+        const imageBlob = []
 
+        files.map(async (file, index) => {
+            const response = await fetch(file)
+            const blob = await response.blob()
+            
+            console.log(JSON.stringify(response))
+        })
+    }
     return(
         <ScrollView style={styles.scrollView} >
             <ImageRestaurant 
                 image={files[0]}
             />
-            <FormAdd setPlato={setPlato} setIsVisibleMap={setIsVisibleMap} setPrice={setPrice} setDescription={setDescription} />
+            <FormAdd 
+                setPlato={setPlato} 
+                setIsVisibleMap={setIsVisibleMap} 
+                setPrice={setPrice} 
+                setDescription={setDescription} 
+                locationPlato={locationPlato}
+            />
             <UploadImage setFiles={setFiles} files={files} toastRef={toastRef} />
             <Button 
                 title="Crear plato"
                 onPress={addPlato}
                 buttonStyle={styles.btnAdd}
             />
-            <Map isVisibleMap={isVisibleMap} setIsVisibleMap={setIsVisibleMap} />
+            <Map 
+                isVisibleMap={isVisibleMap} 
+                setIsVisibleMap={setIsVisibleMap} 
+                setLocationPlato={setLocationPlato}
+                toastRef={toastRef}
+            />
         </ScrollView>
     )
 }
@@ -85,17 +110,82 @@ function ImageRestaurant(props){
 }
 
 function Map(props){
-    const {isVisibleMap, setIsVisibleMap} = props
-    console.log(isVisibleMap)
+    const {isVisibleMap, setIsVisibleMap, setLocationPlato, toastRef} = props
+    const [location, setLocation] = useState(null)
+
+    useEffect(() => {
+        (async () => {
+            const resultPermissions = await Permissions.askAsync(
+                Permissions.LOCATION
+            )
+            const statusPermissions = resultPermissions.permissions.location.status
+            if(statusPermissions !== "granted"){
+                toastRef.current.show("Tiene que aceptar los permisos de lcoalizacion para crear un plato", 3000)
+            }else{
+                const loc = await Location.getCurrentPositionAsync({})
+                setLocation({
+                    latitude: loc.coords.latitude,
+                    longitude: loc.coords.longitude,
+                    latitudeDelta: 0.001,
+                    longitudeDelta: 0.001 
+                })
+            }
+        })()
+    },[])
+
+    const confirmLocation = () => {
+        setLocationPlato(location)
+        toastRef.current.show("Localizacion guardada correctamente")
+        setIsVisibleMap(false)
+    }
     return (
         <Modal isVisible={isVisibleMap} setIsVisible={setIsVisibleMap}>
-            <Text>Mapa</Text>
+            <View>
+                {location && (
+                    <MapView 
+                        style={styles.mapStyle} 
+                        initialRegion={location} 
+                        showsUserLocation={true} 
+                        onRegionChange={
+                            (region) => setLocation(region)
+                        } 
+                    >
+                        <MapView.Marker 
+                            coordinate={{
+                                latitude: location.latitude,
+                                longitude: location.longitude
+                            }}
+                            draggable
+                        />
+                    </MapView>
+                )}
+                <View style={styles.viewMapBtn}>
+                    <Button 
+                        title="Guardar Ubicacion"
+                        onPress={() => console.log("GUARDAR")}
+                        containerStyle={styles.viewMapBtnContainerSave}
+                        buttonStyle={styles.viewMapBtnSave}
+                        onPress={ () => confirmLocation() }
+                    />
+                    <Button 
+                        title="Cancelar"
+                        containerStyle={styles.viewMapBtnContainerCancel}
+                        buttonStyle={styles.viewMapBtnCancel}
+                        onPress={ () => setIsVisibleMap(false) }
+                    />
+                </View>    
+            </View>
         </Modal>
     )
 }
 function FormAdd(props){
-    const {setPlato, setPrice, setDescription, setIsVisibleMap} = props
-    
+    const {
+        setPlato,
+        setPrice, 
+        setDescription, 
+        setIsVisibleMap,
+        locationPlato
+    } = props
     return(
         <View style={styles.viewForm}>
             <Input 
@@ -111,6 +201,7 @@ function FormAdd(props){
                     <Icon 
                         type="material-community"
                         name="google-maps"
+                        color={locationPlato ? "#000000" : "#c2c2c2"}
                         onPress={() => setIsVisibleMap(true)}
                     />
                     
@@ -247,4 +338,25 @@ const styles = StyleSheet.create({
         margin: 2,
         padding: 2
     },
+    mapStyle: {
+        width: "100%",
+        height: 550
+    },
+    viewMapBtn: {
+        flexDirection: "row",
+        justifyContent: "center",
+        marginTop: 10,
+    },
+    viewMapBtnContainerCancel: {
+        paddingLeft: 5
+    },
+    viewMapBtnCancel: {
+        backgroundColor: "#a60d0d"
+    },
+    viewMapBtnContainerSave: {
+        paddingRight: 5
+    },
+    viewMapBtnSave: {
+        backgroundColor: "#00a680"
+    }
 })
