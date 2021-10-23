@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 export default function LoginForm(props){
-    const [showPassword,setShowPassword] = useState(false)
+    const [showPassword,setShowPassword] = useState(true)
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState(defaultFormValues())
     const {toastRef} = props 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Alert, Text, ScrollView, Dimensions } from 'react-native'
+import { StyleSheet, View, Alert, Text, ScrollView, Dimensions, Platform } from 'react-native'
 import { Icon, Avatar, Image, Input, Button } from 'react-native-elements'
 import { size, filter } from "lodash"
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -22,7 +22,6 @@ export default function AddPlatoForm(props){
     const urlStorePlato = 'http://192.168.0.7:8000/api/store-platos'
     const [isVisibleMap, setIsVisibleMap] = useState(false)
     const [locationPlato, setLocationPlato] = useState(null)
-
     const addPlato = async () => {
         if( !plato || !price || !description ){
             toastRef.current.show("¿Falto agregar algun campo?")
@@ -31,43 +30,69 @@ export default function AddPlatoForm(props){
         }else if(!locationPlato){
             toastRef.current.show("Debe localizar donde se encuentra el plato en el mapa")
         }else{    
-
-            updateImage()
-            //const token = await AsyncStorage.getItem('token')
-            //const value = await AsyncStorage.getItem('@MySuperStore:666999')
-            //const formData = new FormData()
-            //formData.append('name', plato)
-            //formData.append('price', price)
-            //formData.append('description', description)
-            //formData.append('latitude', locationPlato.latitude)
-            //formData.append('longitude', locationPlato.longitude)
-            //formData.append('token', token)
-//
-            //fetch( urlStorePlato ,{
-            //    method: 'POST',
-            //    headers: {'Content-type' : 'application/form-data', 'X-CSRF-TOKEN' : value},
-            //    body: formData
-            //})
-            //.then((response) => response.json())
-            //.then((responseJSON) => {
-            //    console.log(JSON.stringify(responseJSON))
-            //})
-            //.catch((error) => {
-            //    console.log(error)
-            //})
+            setIsLoading(true)
+            updateImage().then(async (response) => {
+                const token = await AsyncStorage.getItem('token')
+                const value = await AsyncStorage.getItem('@MySuperStore:666999')
+                const formData = new FormData()
+                formData.append('name', plato)
+                formData.append('price', price)
+                formData.append('description', description)
+                formData.append('latitude', locationPlato.latitude)
+                formData.append('longitude', locationPlato.longitude)
+                formData.append('token', token)
+                formData.append('path', JSON.stringify(response))
+                fetch( urlStorePlato ,{
+                    method: 'POST',
+                    headers: {'Content-type' : 'application/form-data', 'X-CSRF-TOKEN' : value},
+                    body: formData
+                })
+                .then((response) => response.json())
+                .then((responseJSON) => {
+                    setIsLoading(false)
+                    console.log(JSON.stringify(responseJSON))
+                })
+                .catch((error) => {
+                    setIsLoading(false)
+                    console.log(error)
+                })
+            })
         }
     }
     
     const updateImage = async () => {
-        console.log(files)
+        const urlStoreImage = 'http://192.168.0.7:8000/api/store-file-plato'
         const imageBlob = []
-
-        files.map(async (file, index) => {
-            const response = await fetch(file)
-            const blob = await response.blob()
-            
-            console.log(JSON.stringify(response))
-        })
+        const value = await AsyncStorage.getItem('@MySuperStore:666999')
+        const token = await AsyncStorage.getItem('token')
+        let formData = new FormData()
+        await Promise.all(
+            files.map(async (file, index) => {
+                const response = await fetch(file)
+                const blob = await response.blob()
+                formData.append('token', token)
+                formData.append('image', {
+                    file: blob,
+                    uri: Platform.OS === 'ios' ? file.replace('file://', ''): file,
+                    type: blob.type,
+                    size: blob.size,
+                    name: blob._data.name   
+                })
+                await fetch(urlStoreImage, {
+                    method: 'POST',
+                    headers:{ 'Content-type' : 'multipart/form-data', 'X-CSRF-TOKEN' : value },
+                    body: formData
+                })
+                .then((response) => response.json())
+                .then((responseJSON) => {
+                    imageBlob.push(responseJSON.path)
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+            })
+        )
+        return imageBlob
     }
     return(
         <ScrollView style={styles.scrollView} >
