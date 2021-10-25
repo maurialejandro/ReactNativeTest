@@ -50,6 +50,10 @@ export default function AddPlatoForm(props){
                 .then((response) => response.json())
                 .then((responseJSON) => {
                     setIsLoading(false)
+		    navigation.reset({
+		    	index: 0,
+			routes: [{ name: 'platos' }]
+		    })
                     console.log(JSON.stringify(responseJSON))
                 })
                 .catch((error) => {

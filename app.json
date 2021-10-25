@@ -29,6 +29,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "package": "com.infosolution.dosruedas",
+      "config": {
+      	"googleMaps": {
+         "apiKey": "AIzaSyCGxeVI8Y2X3xsdK1rvGDGf3Kb_meQdOYU"
+        }
+      },
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.READ_EXTERNAL_STORAGE",
