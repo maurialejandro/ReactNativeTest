@@ -32,7 +32,7 @@
       "package": "com.infosolution.dosruedas",
       "config": {
       	"googleMaps": {
-         "apiKey": "AIzaSyCGxeVI8Y2X3xsdK1rvGDGf3Kb_meQdOYU"
+         "apiKey": "MY-KEY"
         }
       },
       "permissions": [
