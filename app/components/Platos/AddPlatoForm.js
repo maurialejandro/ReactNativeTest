@@ -22,6 +22,7 @@ export default function AddPlatoForm(props){
     const urlStorePlato = 'http://192.168.0.7:8000/api/store-platos'
     const [isVisibleMap, setIsVisibleMap] = useState(false)
     const [locationPlato, setLocationPlato] = useState(null)
+
     const addPlato = async () => {
         if( !plato || !price || !description ){
             toastRef.current.show("¿Falto agregar algun campo?")
@@ -149,7 +150,7 @@ function Map(props){
             )
             const statusPermissions = resultPermissions.permissions.location.status
             if(statusPermissions !== "granted"){
-                toastRef.current.show("Tiene que aceptar los permisos de lcoalizacion para crear un plato", 3000)
+                toastRef.current.show("Tiene que aceptar los permisos de localizacion para crear un plato", 3000)
             }else{
                 const loc = await Location.getCurrentPositionAsync({})
                 setLocation({

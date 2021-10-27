@@ -4,10 +4,10 @@ import UserLogged from "./UserLogged"
 import Loading from "../../components/Loading"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export default function Account(){
+export default function Account(props){
     const [login, setLogin] = useState()
     const urlToken = 'http://192.168.0.7:8000/api/token'
-
+	
     useEffect(() => {
         (async = () => {
             let data = fetch(urlToken).then((response) => response.json()).then((json) => {
@@ -16,7 +16,6 @@ export default function Account(){
         })()
         _getToken()
     },[])
-   
     _storeData = async (appToken) => {
         await AsyncStorage.setItem(
             '@MySuperStore:666999',

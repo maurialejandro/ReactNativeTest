@@ -17,7 +17,7 @@ export default function AddPlatos(props){
                 navigation={navigation}
             /> 
             <Toast ref={toastRef} position="center" opacity={0.9} />
-            <Loading isVisible={isLoading} text="Creando Restaurante" />
+            <Loading isVisible={isLoading} text="Creando Plato" />
         </View>
     )
 }

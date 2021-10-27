@@ -16,7 +16,7 @@ export default function App(){
     return (
         <NavigationContainer>
             <Tab.Navigator 
-                initialRouteName="account"
+               	initialRouteName="account"
                 screenOptions={({route}) => ({
                     tabBarIcon: ({color}) => screenOptions(route, color),
                 })}
@@ -27,7 +27,7 @@ export default function App(){
                <Tab.Screen name="top-platos" options={{ title: "Top Platos" }} component={TopPlatosStack} />
                <Tab.Screen name="account" options={{ title: "Account" }} component={AccountStack} />
             </Tab.Navigator>
-        </NavigationContainer>
+       </NavigationContainer>
     )
 }
 const styles = StyleSheet.create({
