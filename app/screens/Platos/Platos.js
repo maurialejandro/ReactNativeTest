@@ -9,17 +9,16 @@ export default function Platos(props){
     const [ user, setUser ] = useState(null)
     const [ platos, setPlatos ] = useState([])
     const [ totalPlatos, setTotalPlatos ] = useState(null)
-    const [ contPlato, setContPlato ] = useState(null)
+    const [ contPlatos, setContPlatos ] = useState(null)
     const [ skipPlatos, setSkipPlatos ] = useState(null)
     const [ isLoading, setIsLoading ] = useState(false)
     const urlPlatos = 'http://192.168.0.7:8000/api/get-plato'
     const urlInfo = 'http://192.168.0.7:8000/api/info-user'
-    const limitPlatos = 10
-    console.log(skipPlatos)
+    const [ limitPlatos, setLimitPlatos ] = useState(null)
+
     useEffect(() => {
         ((async = () => {
             getData()
-	    getTotalPlatos()
 	    getPlatos()
         }))()
     },[])
@@ -44,12 +43,14 @@ export default function Platos(props){
             console.log(error)
         })
     }
-    let getTotalPlatos = async () => {
+    let getPlatos = async () => {
+	// Obtener un maximo de 10 platos y el total de platos 
     	const value = await AsyncStorage.getItem('@MySuperStore:666999')
 	const token = await AsyncStorage.getItem('token')
 	const formData = new FormData()
-	const resultPlatos = []
-	formData.append('token', token)	
+	formData.append('token', token)
+	formData.append('skip', 0)
+	formData.append('limit', 10)
 	await fetch(urlPlatos,{
 	    method: 'POST',
 	    headers: { 'Content-type': 'multipart/form-data', 'X-CSRF-TOKEN': value },
@@ -57,47 +58,37 @@ export default function Platos(props){
 	})
 	.then((response) => response.json())
 	.then((responseJSON) => {
-	    //devolver solo un maximo de 10 restaurantes
-	    setTotalPlatos(responseJSON.length)
+	    // luego de que se carguen los 10 platos se restan y se setea un nuevo total y un skip para saltar los 10 mostrados 
+	    // se devolvera un total del back 
+	    setTotalPlatos(responseJSON.totalPlatos)
+	    setPlatos(responseJSON.platos)
+	    console.log(responseJSON)
+	    if(responseJSON.totalPlatos > 10){
+		setSkipPlatos(10)
+	    }
+	    setContPlatos(totalPlatos - skipPlatos)
+	    if(contPlatos < 10){
+		setLimitPlatos(10)
+	    }else{
+		setLimitPlatos(contPlatos)
+	    }
 	})
 	.catch((error) => {
 	    console.log(error)
 	})
     }
 
-    let getPlatos = async () => {
-  	// Obtener los primeros 10 platos
-	const value = await AsyncStorage.getItem('@MySuperStore:666999')
-	const token = await AsyncStorage.getItem('token')
-	const formData = new FormData()
-  	formData.append('token', token)
-	formData.append('size', limitPlatos)
-	formData.append('skip', skipPlatos)
-	await fetch(urlPlatos, {
-	    method: 'POST',
-	    headers: { 'Content-type' : 'multipart/form-data', 'X-CSRF-TOKEN' : value },
-	    body: formData
-	})
-	.then((response) => response.json())
-	.then((responseJSON) => {
-	    setPlatos(responseJSON)
-	    if(totalPlatos > 10){
-		setSkipPlatos(totalPlatos - 10)
-	    }
-	})
-	.catch((error) => console.log(error))
-    }
     let getNextPlatos = async () => {
-	//Obtener los siguientes 10 plato
+	setContPlatos(totalPlatos - skipPlatos)
+	// se obtienen los siguientes platos saltando 10 y obteniendo el nuevo total 
 	skipPlatos < totalPlatos && setIsLoading(true)
-	
 	const value = await AsyncStorage.getItem('@MySuperStore:666999')
 	const token = await AsyncStorage.getItem('token')
 	const formData = new FormData()
 	formData.append('token', token)
-	formData.append('skip', limitPlatos)
-	formData.append('size', totalPlatos)
-	console.log(formData)
+	formData.append('skip', skipPlatos)
+	formData.append('limit', limitPlatos)
+	console.log(totalPlatos, contPlatos, skipPlatos, limitPlatos)
 	await fetch(urlPlatos, {
 	    method: 'POST',
 	    headers: { 'Contect-type' : 'multipart/form-data', 'X-CSRF-TOKEN' : value },
@@ -105,13 +96,13 @@ export default function Platos(props){
 	})
 	.then((response) => response.json())
 	.then((responseJSON) => {
-	    setPlatos(responseJSON)
-	    console.log(responseJSON.length)
+	    console.log(responseJSON)
 	})
+	.catch((error) => console.log(error))
     }
     return(
         <View style={styles.viewBody} >
-            <ListPlatos 
+            <ListPlatos
 	    	platos={platos}
 		getNextPlatos={getNextPlatos}
 		isLoading={isLoading}

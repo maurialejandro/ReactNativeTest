@@ -53,7 +53,7 @@ export default function AddPlatoForm(props){
                     setIsLoading(false)
 		    navigation.reset({
 		    	index: 0,
-			routes: [{ name: 'platos' }]
+			    routes: [{ name: 'platos' }]
 		    })
                     console.log(JSON.stringify(responseJSON))
                 })

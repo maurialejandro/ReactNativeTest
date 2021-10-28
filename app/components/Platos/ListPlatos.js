@@ -50,7 +50,7 @@ function Platos(props){
 		<View>
 		    <Text style={styles.txtName} >{name}</Text>
 		    <Text style={styles.txtPrice} >${price}</Text>
-		    <Text style={styles.txtDescription} >{description.substr(0, 60)}...</Text>
+		    <Text style={styles.txtDescription} >{description.substr(0, 36)}...</Text>
 		</View>
 	    </View>
 	</TouchableOpacity>
