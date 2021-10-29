@@ -2,16 +2,17 @@ import React, {useState} from "react"
 import { StyleSheet, View, Text, FlatList, ActivityIndicator, TouchableOpacity } from "react-native"
 import { Image } from "react-native-elements"
 import { size } from "lodash"
+import { useNavigation } from "@react-navigation/native"
  
 export default function ListPlatos(props){
     const { platos, isLoading, getNextPlatos } = props
-
+    const navigation = useNavigation()
     return(
 	<View>
 	    {size(platos) > 0 ? (
 	        <FlatList
 		    data={platos}
-		    renderItem={(plato) => <Platos plato={plato}/> }
+		    renderItem={(plato) => <Platos navigation={navigation} plato={plato}/>}
 		    keyExtractor={(item, index) => index.toString()}
 		    onEndReachedThreshold={0.5}
 		    onEndReached={getNextPlatos}
@@ -26,14 +27,15 @@ export default function ListPlatos(props){
 	</View>
     )
 }
-const goToPlato = () => {
-    // ir a screen para mostrar plato con detalle
-    console.log('OK')
-}
-function Platos(props){
-    const { plato } = props
-    const { img, name, price, description } = plato.item
 
+function Platos(props){
+    const { plato, navigation } = props
+    const { img, name, price, description } = plato.item
+    const goToPlato = () => {
+	navigation.navigate("Plato", {
+	    plato: plato
+	})
+    }
     return(
     	<TouchableOpacity onPress={() => goToPlato()}>
 	    <View style={styles.viewPlato}>

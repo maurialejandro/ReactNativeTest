@@ -15,7 +15,7 @@ export default function Platos(props){
     const urlPlatos = 'http://192.168.0.7:8000/api/get-plato'
     const urlInfo = 'http://192.168.0.7:8000/api/info-user'
     const [ limitPlatos, setLimitPlatos ] = useState(null)
-
+    const [ newPlatos, setNewPlatos ] = useState([])
     useEffect(() => {
         ((async = () => {
             getData()
@@ -44,7 +44,6 @@ export default function Platos(props){
         })
     }
     let getPlatos = async () => {
-	// Obtener un maximo de 10 platos y el total de platos 
     	const value = await AsyncStorage.getItem('@MySuperStore:666999')
 	const token = await AsyncStorage.getItem('token')
 	const formData = new FormData()
@@ -62,7 +61,6 @@ export default function Platos(props){
 	    // se devolvera un total del back 
 	    setTotalPlatos(responseJSON.totalPlatos)
 	    setPlatos(responseJSON.platos)
-	    console.log(responseJSON)
 	    if(responseJSON.totalPlatos > 10){
 		setSkipPlatos(10)
 	    }
@@ -77,10 +75,8 @@ export default function Platos(props){
 	    console.log(error)
 	})
     }
-
     let getNextPlatos = async () => {
 	setContPlatos(totalPlatos - skipPlatos)
-	// se obtienen los siguientes platos saltando 10 y obteniendo el nuevo total 
 	skipPlatos < totalPlatos && setIsLoading(true)
 	const value = await AsyncStorage.getItem('@MySuperStore:666999')
 	const token = await AsyncStorage.getItem('token')
@@ -88,7 +84,6 @@ export default function Platos(props){
 	formData.append('token', token)
 	formData.append('skip', skipPlatos)
 	formData.append('limit', limitPlatos)
-	console.log(totalPlatos, contPlatos, skipPlatos, limitPlatos)
 	await fetch(urlPlatos, {
 	    method: 'POST',
 	    headers: { 'Contect-type' : 'multipart/form-data', 'X-CSRF-TOKEN' : value },
@@ -96,7 +91,10 @@ export default function Platos(props){
 	})
 	.then((response) => response.json())
 	.then((responseJSON) => {
-	    console.log(responseJSON)
+	    setIsLoading(false)
+	    setPlatos([...platos, ...responseJSON.platos])
+	    setSkipPlatos(skipPlatos + limitPlatos) 
+	    setLimitPlatos(contPlatos - limitPlatos)
 	})
 	.catch((error) => console.log(error))
     }

@@ -2,6 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Platos from "../screens/Platos/Platos";
 import AddPlatos from "../screens/Platos/AddPlatos";
+import Plato from "../screens/Platos/Plato"
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,10 @@ export default function PlatosStack(){
                 component={AddPlatos}
                 options={{title: "Añadir nuevos platos"}}
             />
+	    <Stack.Screen 
+		name="Plato"
+	  	component={Plato}
+	    />
         </Stack.Navigator>
     )
 }
