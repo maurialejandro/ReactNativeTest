@@ -15,7 +15,6 @@ export default function Platos(props){
     const urlPlatos = 'http://192.168.0.7:8000/api/get-plato'
     const urlInfo = 'http://192.168.0.7:8000/api/info-user'
     const [ limitPlatos, setLimitPlatos ] = useState(null)
-    const [ newPlatos, setNewPlatos ] = useState([])
     useEffect(() => {
         ((async = () => {
             getData()
@@ -56,9 +55,7 @@ export default function Platos(props){
 	    body: formData
 	})
 	.then((response) => response.json())
-	.then((responseJSON) => {
-	    // luego de que se carguen los 10 platos se restan y se setea un nuevo total y un skip para saltar los 10 mostrados 
-	    // se devolvera un total del back 
+	.then((responseJSON) => { 
 	    setTotalPlatos(responseJSON.totalPlatos)
 	    setPlatos(responseJSON.platos)
 	    if(responseJSON.totalPlatos > 10){

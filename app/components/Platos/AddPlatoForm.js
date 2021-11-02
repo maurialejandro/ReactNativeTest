@@ -41,6 +41,8 @@ export default function AddPlatoForm(props){
                 formData.append('description', description)
                 formData.append('latitude', locationPlato.latitude)
                 formData.append('longitude', locationPlato.longitude)
+                formData.append('latitudeDelta', locationPlato.latitudeDelta)
+                formData.append('longitudeDelta', locationPlato.longitudeDelta)
                 formData.append('token', token)
                 formData.append('path', JSON.stringify(response))
                 fetch( urlStorePlato ,{
@@ -140,6 +142,7 @@ function ImageRestaurant(props){
 }
 
 function Map(props){
+    // verificar ubicaciones almacenadas y mostradas, no se esta guardando o mostrando correctamente  
     const {isVisibleMap, setIsVisibleMap, setLocationPlato, toastRef} = props
     const [location, setLocation] = useState(null)
 
@@ -153,6 +156,7 @@ function Map(props){
                 toastRef.current.show("Tiene que aceptar los permisos de localizacion para crear un plato", 3000)
             }else{
                 const loc = await Location.getCurrentPositionAsync({})
+                console.log(loc)
                 setLocation({
                     latitude: loc.coords.latitude,
                     longitude: loc.coords.longitude,
@@ -253,8 +257,6 @@ function UploadImage(props){
         const resultPermissions = await Permissions.askAsync(
             Permissions.CAMERA_ROLL
         )
-        // Consultar donde estan todos los datos modificables de la app
-        // saber de la base como funciona los sistemas informaticos y todo lo que se base en eso
         
         if(resultPermissions === "denied"){
             toastRef.current.show("Es necesario aceptar los permisos de galeria", 3000)

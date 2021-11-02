@@ -19,7 +19,6 @@ export default function InfoUser(props){
     useEffect(()=>{
         if(avatar){
             setPhotoURL(`http://192.168.0.7:8000/api/get-avatar/${avatar}`)
-            console.log(photoURL)
         }
     },[])
     const changeAvatar = async () => {

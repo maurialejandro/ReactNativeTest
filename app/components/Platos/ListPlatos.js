@@ -32,9 +32,9 @@ function Platos(props){
     const { plato, navigation } = props
     const { img, name, price, description } = plato.item
     const goToPlato = () => {
-	navigation.navigate("Plato", {
-	    plato: plato
-	})
+		navigation.navigate("Plato", {
+		    plato: plato 
+		})
     }
     return(
     	<TouchableOpacity onPress={() => goToPlato()}>
@@ -61,17 +61,17 @@ function Platos(props){
 function FooterList(props){
     const { isLoading } = props
     if(isLoading){
-	return (
-	    <View style={styles.loadingPlato}>
-		<ActivityIndicator size="large" />
-	    </View>
-	)
+		return (
+		    <View style={styles.loadingPlato}>
+				<ActivityIndicator size="large" />
+		    </View>
+		)
     }else{
-	return(
-	    <View style={styles.notFoundPlato}>
-		<Text>No quedan platos que mostrar</Text>
-	    </View>
-	)
+		return(
+		    <View style={styles.notFoundPlato}>
+			<Text>No quedan platos que mostrar</Text>
+		    </View>
+		)
     }
 }
 const styles = StyleSheet.create({
@@ -88,29 +88,29 @@ const styles = StyleSheet.create({
     	marginRight: 15
     },
     imagePlato: {
-	width: 80,
-	height: 80
+		width: 80,
+		height: 80
     },
     txtName: {
-	fontWeight: "bold"
+		fontWeight: "bold"
     },
     txtPrice: {
-	paddingTop: 2,
-	color: "black"
+		paddingTop: 2,
+		color: "black"
     },
     txtDescription: {
-	paddingTop: 2,
-	color: "grey",
-	width: 300
+		paddingTop: 2,
+		color: "grey",
+		width: 300
     },
     loadingPlato: {
-	marginTop: 10,
-	marginBottom: 10,
-	alignItems: "center"
+		marginTop: 10,
+		marginBottom: 10,
+		alignItems: "center"
     },
     notFoundPlato: {
-	marginTop: 10,
-	marginBottom: 20,
-	alignItems: "center"
+		marginTop: 10,
+		marginBottom: 20,
+		alignItems: "center"
     }
 })

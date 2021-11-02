@@ -31,6 +31,7 @@ export default function LoginForm(props){
                 })
                 .then((response) => response.json())
                 .then((responseJSON) => {
+                    console.log(responseJSON)
                     if(responseJSON.token){
                         setLoading(false)
                         _storeToken(responseJSON.token)
@@ -62,9 +63,9 @@ export default function LoginForm(props){
         }
     }
     const onSubmit = () => {
-        if ( isEmpty(formData.email) || isEmpty(formData.password) ||  (!validateEmail(formData.email)) || (size(formData.password)<=6)  ){
+        if(isEmpty(formData.email) || isEmpty(formData.password) ||  (!validateEmail(formData.email)) || (size(formData.password) <= 6)){
             toastRef.current.show("Contraseña o correo incorrectos")
-        } else { 
+        }else{ 
             loginUser()
         }  
     }

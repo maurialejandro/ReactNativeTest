@@ -19,10 +19,10 @@ export default function PlatosStack(){
                 component={AddPlatos}
                 options={{title: "Añadir nuevos platos"}}
             />
-	    <Stack.Screen 
-		name="Plato"
-	  	component={Plato}
-	    />
+	        <Stack.Screen 
+		        name="Plato"
+	  	        component={Plato}
+	        />
         </Stack.Navigator>
     )
 }
