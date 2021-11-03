@@ -8,7 +8,7 @@ import { size } from "lodash"
 export default function ChangeDisplayPassword(props){
     const { setShowModal, toastRef } = props
     const [error, setError] = useState({})
-    const urlUpdateProfilePass = 'http://192.168.0.7:8000/api/update-profile-pass'
+    const urlUpdateProfilePass = `${url}/update-profile-pass`
     const [isLoading, setIsLoading] = useState(false)
     const navigation = useNavigation()
     const [ form, setForm ] = useState(defaultValues())

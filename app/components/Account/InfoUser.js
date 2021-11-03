@@ -15,10 +15,10 @@ export default function InfoUser(props){
     } = props
 
     const [photoURL, setPhotoURL] = useState(null)
-    const urlAvatar = "http://192.168.0.7:8000/api/store-avatar"
+    const urlAvatar = `${url}/store-avatar`
     useEffect(()=>{
         if(avatar){
-            setPhotoURL(`http://192.168.0.7:8000/api/get-avatar/${avatar}`)
+            setPhotoURL(`${url}/get-avatar/${avatar}`)
         }
     },[])
     const changeAvatar = async () => {
@@ -77,9 +77,8 @@ export default function InfoUser(props){
         })
         .then((response) => response.json())
         .then(async (responseJSON) => {
-            console.log(responseJSON)
             if(responseJSON.status === "success"){
-                await setPhotoURL(`http://192.168.0.7:8000/api/get-avatar/${responseJSON.avatar}`)
+                await setPhotoURL(`${url}/get-avatar/${responseJSON.avatar}`)
                 toastRef.current.show('Imagen subida satisfactoriamente') 
             }
             setLoading(false)

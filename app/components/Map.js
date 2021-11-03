@@ -4,8 +4,6 @@ import openMap from "react-native-open-maps"
 
 export default function Map(props){
     const { latitude, longitude, latitudeDelta, longitudeDelta, name, height } = props
-    // No se estan guardando o mostrando correctamente las ubicaciones almacenadas 
-    console.log(parseFloat(latitude), longitude, latitudeDelta, longitudeDelta)
     const openAppMap = () => {
         openMap({
             latitude: parseFloat(latitude),

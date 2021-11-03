@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function Account(props){
     const [login, setLogin] = useState()
-    const urlToken = 'http://192.168.0.7:8000/api/token'
+    const urlToken = `${url}/token`
 	
     useEffect(() => {
         (async = () => {

@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, FlatList, ActivityIndicator, TouchableOpacity }
 import { Image } from "react-native-elements"
 import { size } from "lodash"
 import { useNavigation } from "@react-navigation/native"
- 
+
 export default function ListPlatos(props){
     const { platos, isLoading, getNextPlatos } = props
     const navigation = useNavigation()
@@ -44,7 +44,7 @@ function Platos(props){
 			resizeMode="cover"
 			PlaceholderContent={<ActivityIndicator color="#000"/>}
 		    	source={
-			    img ? { uri : `http://192.168.0.7:8000/api/get-file/${img.split(',')[0]}` } : require("../../../assets/img/default-image.png")
+			    img ? { uri : `${url}/get-file/${img.split(',')[0]}` } : require("../../../assets/img/default-image.png")
 			}
 			style={styles.imagePlato}
 		    />

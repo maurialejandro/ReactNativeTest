@@ -10,7 +10,7 @@ export default function ChangeDisplayEmail(props){
 
     const [error, setError] = useState(null)
     const [errorPass, setErrorPass] = useState(null)
-    const urlUpdateProfileEmail = 'http://192.168.0.7:8000/api/update-profile-email'
+    const urlUpdateProfileEmail = `${url}/update-profile-email`
     const [isLoading, setIsLoading] = useState(false)
     const navigation = useNavigation()
     const [ form, setForm ] = useState(defaultValues())

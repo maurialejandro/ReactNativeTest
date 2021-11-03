@@ -12,8 +12,8 @@ export default function Platos(props){
     const [ contPlatos, setContPlatos ] = useState(null)
     const [ skipPlatos, setSkipPlatos ] = useState(null)
     const [ isLoading, setIsLoading ] = useState(false)
-    const urlPlatos = 'http://192.168.0.7:8000/api/get-plato'
-    const urlInfo = 'http://192.168.0.7:8000/api/info-user'
+    const urlPlatos = `${url}/get-plato`
+    const urlInfo = `${url}/info-user`
     const [ limitPlatos, setLimitPlatos ] = useState(null)
     useEffect(() => {
         ((async = () => {
@@ -43,57 +43,61 @@ export default function Platos(props){
         })
     }
     let getPlatos = async () => {
-    	const value = await AsyncStorage.getItem('@MySuperStore:666999')
-	const token = await AsyncStorage.getItem('token')
-	const formData = new FormData()
-	formData.append('token', token)
-	formData.append('skip', 0)
-	formData.append('limit', 10)
-	await fetch(urlPlatos,{
-	    method: 'POST',
-	    headers: { 'Content-type': 'multipart/form-data', 'X-CSRF-TOKEN': value },
-	    body: formData
-	})
-	.then((response) => response.json())
-	.then((responseJSON) => { 
-	    setTotalPlatos(responseJSON.totalPlatos)
-	    setPlatos(responseJSON.platos)
-	    if(responseJSON.totalPlatos > 10){
-		setSkipPlatos(10)
-	    }
-	    setContPlatos(totalPlatos - skipPlatos)
-	    if(contPlatos < 10){
-		setLimitPlatos(10)
-	    }else{
-		setLimitPlatos(contPlatos)
-	    }
-	})
-	.catch((error) => {
-	    console.log(error)
-	})
+        const value = await AsyncStorage.getItem('@MySuperStore:666999')
+	    const token = await AsyncStorage.getItem('token')
+	    const formData = new FormData()
+	    formData.append('token', token)
+	    formData.append('skip', 0)
+	    formData.append('limit', 0)
+	    await fetch(urlPlatos,{
+	        method: 'POST',
+	        headers: { 'Content-type': 'multipart/form-data', 'X-CSRF-TOKEN': value },
+	        body: formData
+	    })
+	    .then((response) => response.json())
+	    .then((responseJSON) => { 
+            setTotalPlatos(responseJSON.totalPlatos)
+            setContPlatos(responseJSON.totalPlatos)
+	        setPlatos(responseJSON.platos)
+            setLimitPlatos(responseJSON.limit)
+            if(responseJSON.totalPlatos > 10){
+                setSkipPlatos(10)
+            }else{
+                setSkipPlatos(0) 
+                setTotalPlatos(0)
+                setIsLoading(false)
+            }
+        })
+	    .catch((error) => {
+	        console.log(error)
+	    })
+
     }
+
     let getNextPlatos = async () => {
-	setContPlatos(totalPlatos - skipPlatos)
-	skipPlatos < totalPlatos && setIsLoading(true)
-	const value = await AsyncStorage.getItem('@MySuperStore:666999')
-	const token = await AsyncStorage.getItem('token')
-	const formData = new FormData()
-	formData.append('token', token)
-	formData.append('skip', skipPlatos)
-	formData.append('limit', limitPlatos)
-	await fetch(urlPlatos, {
-	    method: 'POST',
-	    headers: { 'Contect-type' : 'multipart/form-data', 'X-CSRF-TOKEN' : value },
-	    body: formData
-	})
-	.then((response) => response.json())
-	.then((responseJSON) => {
-	    setIsLoading(false)
-	    setPlatos([...platos, ...responseJSON.platos])
-	    setSkipPlatos(skipPlatos + limitPlatos) 
-	    setLimitPlatos(contPlatos - limitPlatos)
-	})
-	.catch((error) => console.log(error))
+        if(skipPlatos < totalPlatos){
+	        const value = await AsyncStorage.getItem('@MySuperStore:666999')
+	        const token = await AsyncStorage.getItem('token')
+	        const formData = new FormData()
+	        formData.append('token', token)
+	        formData.append('skip', skipPlatos)
+	        formData.append('limit', limitPlatos)
+	        await fetch(urlPlatos, {
+	            method: 'POST',
+	            headers: { 'Contect-type' : 'multipart/form-data', 'X-CSRF-TOKEN' : value },
+	            body: formData
+	        })
+	        .then((response) => response.json())
+	        .then((responseJSON) => {
+	            setIsLoading(false)
+	            setPlatos([...platos, ...responseJSON.platos])
+	            setSkipPlatos(skipPlatos + limitPlatos) 
+	            setLimitPlatos(contPlatos - limitPlatos)
+	        })
+	        .catch((error) => console.log(error))
+        }else{
+            setIsLoading(false)
+        }
     }
     return(
         <View style={styles.viewBody} >

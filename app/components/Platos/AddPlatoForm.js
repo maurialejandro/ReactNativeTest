@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Alert, Text, ScrollView, Dimensions, Platform } from 'react-native'
 import { Icon, Avatar, Image, Input, Button } from 'react-native-elements'
-import { size, filter } from "lodash"
+import { size, filter, isInteger } from "lodash"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Permissions from "expo-permissions"
 import * as ImagePicker from "expo-image-picker"
@@ -16,13 +16,13 @@ export default function AddPlatoForm(props){
     
     const { toastRef, setIsLoading, navigation } = props
     const [plato, setPlato] = useState("")
-    const [price, setPrice] = useState("")
+    const [price, setPrice] = useState(0)
     const [description, setDescription] = useState("")
     const [files, setFiles] = useState([])
-    const urlStorePlato = 'http://192.168.0.7:8000/api/store-platos'
+    const urlStorePlato = `${url}/store-platos`
     const [isVisibleMap, setIsVisibleMap] = useState(false)
     const [locationPlato, setLocationPlato] = useState(null)
-
+    
     const addPlato = async () => {
         if( !plato || !price || !description ){
             toastRef.current.show("¿Falto agregar algun campo?")
@@ -45,7 +45,7 @@ export default function AddPlatoForm(props){
                 formData.append('longitudeDelta', locationPlato.longitudeDelta)
                 formData.append('token', token)
                 formData.append('path', JSON.stringify(response))
-                fetch( urlStorePlato ,{
+                fetch(urlStorePlato ,{
                     method: 'POST',
                     headers: {'Content-type' : 'application/form-data', 'X-CSRF-TOKEN' : value},
                     body: formData
@@ -53,11 +53,10 @@ export default function AddPlatoForm(props){
                 .then((response) => response.json())
                 .then((responseJSON) => {
                     setIsLoading(false)
-		    navigation.reset({
-		    	index: 0,
-			    routes: [{ name: 'platos' }]
-		    })
-                    console.log(JSON.stringify(responseJSON))
+		            navigation.reset({
+		            	index: 0,
+			            routes: [{ name: 'platos' }]
+		            })
                 })
                 .catch((error) => {
                     setIsLoading(false)
@@ -68,7 +67,7 @@ export default function AddPlatoForm(props){
     }
     
     const updateImage = async () => {
-        const urlStoreImage = 'http://192.168.0.7:8000/api/store-file-plato'
+        const urlStoreImage = `${url}/store-file-plato`
         const imageBlob = []
         const value = await AsyncStorage.getItem('@MySuperStore:666999')
         const token = await AsyncStorage.getItem('token')
@@ -142,7 +141,6 @@ function ImageRestaurant(props){
 }
 
 function Map(props){
-    // verificar ubicaciones almacenadas y mostradas, no se esta guardando o mostrando correctamente  
     const {isVisibleMap, setIsVisibleMap, setLocationPlato, toastRef} = props
     const [location, setLocation] = useState(null)
 
@@ -156,7 +154,7 @@ function Map(props){
                 toastRef.current.show("Tiene que aceptar los permisos de localizacion para crear un plato", 3000)
             }else{
                 const loc = await Location.getCurrentPositionAsync({})
-                console.log(loc)
+                
                 setLocation({
                     latitude: loc.coords.latitude,
                     longitude: loc.coords.longitude,
@@ -230,6 +228,7 @@ function FormAdd(props){
             <Input 
                 placeholder="Precio"
                 containerStyle={styles.input}
+                keyboardType="numeric"
                 onChange={ (e) => setPrice(e.nativeEvent.text)}
                 rightIcon={
                     <Icon 
@@ -274,15 +273,13 @@ function UploadImage(props){
                         {resize : {width: result.width * 0.5, height: result.height * 0.5}}
                     ],
                     { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }
-                )
-                 
+                )                
                 setFiles([...files, file.uri])
             }
         }
     }
 
     const removeImage = (image) => {
-        
         Alert.alert(
             "Eliminar Imagen",
             "¿Estas seguro que quieres eliminar imagen?",

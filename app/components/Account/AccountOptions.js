@@ -1,7 +1,6 @@
 import React, {useState} from "react"
 import { StyleSheet, View, Text } from "react-native"
 import { ListItem, Icon } from "react-native-elements"
-import map from "lodash"
 import Modal from "../../components/Account/Modal"
 import ChangeDisplayName from "./ChangeDisplayName"
 import ChangeDisplayEmail from "./ChangeDisplayEmail"

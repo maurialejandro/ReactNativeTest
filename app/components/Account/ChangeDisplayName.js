@@ -8,7 +8,7 @@ export default function ChangeDisplayName(props){
     const { displayName, setShowModal, toastRef } = props
     const [ newDisplayName, setNewDisplayName ] = useState(null)
     const [error, setError] = useState(null)
-    const urlUpdateProfile = 'http://192.168.0.7:8000/api/update-profile-name'
+    const urlUpdateProfile = `${url}/update-profile-name`
     const [isLoading, setIsLoading] = useState(false)
     const navigation = useNavigation()
 
