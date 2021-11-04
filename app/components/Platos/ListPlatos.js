@@ -11,13 +11,13 @@ export default function ListPlatos(props){
 	<View>
 	    {size(platos) > 0 ? (
 	        <FlatList
-		    data={platos}
-		    renderItem={(plato) => <Platos navigation={navigation} plato={plato}/>}
-		    keyExtractor={(item, index) => index.toString()}
-		    onEndReachedThreshold={0.5}
-		    onEndReached={getNextPlatos}
-		    ListFooterComponent={<FooterList isLoading={isLoading} />}
-		/>
+		    	data={platos}
+		    	renderItem={(plato) => <Platos navigation={navigation} plato={plato}/>}
+		    	keyExtractor={(item, index) => index.toString()}
+		    	onEndReachedThreshold={0.5}
+		    	onEndReached={getNextPlatos}
+		    	ListFooterComponent={<FooterList isLoading={isLoading} />}
+			/>
  	    ) : (
 	        <View style={styles.loaderPlatos}>
 		    <ActivityIndicator size="large" /> 
@@ -77,12 +77,12 @@ function FooterList(props){
 const styles = StyleSheet.create({
     loaderPlatos: {
         marginTop: 10,
-	marginBottom: 10,
-	alignItems: "center"
+		marginBottom: 10,
+		alignItems: "center"
     },
     viewPlato: {
     	flexDirection: "row",
-	margin: 10
+		margin: 10
     },
     viewPlatoImage: {
     	marginRight: 15

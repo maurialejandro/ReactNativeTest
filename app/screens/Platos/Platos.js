@@ -18,7 +18,7 @@ export default function Platos(props){
     useEffect(() => {
         ((async = () => {
             getData()
-	    getPlatos()
+	        getPlatos()
         }))()
     },[])
     let getData = async () => {
@@ -55,7 +55,7 @@ export default function Platos(props){
 	        body: formData
 	    })
 	    .then((response) => response.json())
-	    .then((responseJSON) => { 
+	    .then((responseJSON) => {
             setTotalPlatos(responseJSON.totalPlatos)
             setContPlatos(responseJSON.totalPlatos)
 	        setPlatos(responseJSON.platos)
@@ -102,16 +102,16 @@ export default function Platos(props){
     return(
         <View style={styles.viewBody} >
             <ListPlatos
-	    	platos={platos}
-		getNextPlatos={getNextPlatos}
-		isLoading={isLoading}
-   	    />
+	    	    platos={platos}
+		        getNextPlatos={getNextPlatos}
+		        isLoading={isLoading}
+   	        />
             { user && (
                 <Icon
                     reverse
                     type="material-community"
                     name="plus"
-                    color="#00a680"
+                    color="orange"
                     containerStyle={styles.btnContainer}
                     onPress={ () => navigation.navigate('add-platos') }
                 />
@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 10,
         right:10,
+        backgroundColor: "#fff",
         shadowColor: "black",
         shadowOffset: {
             width: 2, height: 2

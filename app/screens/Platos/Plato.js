@@ -3,10 +3,12 @@ import { LogBox, View, Text, StyleSheet, ScrollView, Dimensions } from "react-na
 import { Rating } from "react-native-elements"
 import Carousel from "../../components/Carousel"
 import Map from "../../components/Map"
+import ListReview from "../../components/Platos/ListReviews"
 
 export default function Plato({ route, navigation }){
     const { plato } = route.params
-    const { img, name, description, latitude, longitude, price, rating, rating_total, quantity_voting, longitudeDelta, latitudeDelta } = plato.item
+    console.log(plato)
+    const { img, name, review, description, latitude, longitude, price, rating, rating_total, quantity_voting, longitudeDelta, latitudeDelta } = plato.item
     const screenWidth = Dimensions.get("window").width
     const arrayImage = img.split(",")
 
@@ -39,6 +41,10 @@ export default function Plato({ route, navigation }){
                 rating_total={rating_total}
                 quantity_voting={quantity_voting}
             /> 
+            <ListReview 
+                navigation={navigation}
+                plato={plato}
+            />
         </ScrollView>
     )
 
@@ -57,7 +63,15 @@ export default function Plato({ route, navigation }){
                 />
                 <Text style={styles.txtDescPlato} >{description}</Text>
                 <Text style={styles.txtDescPlato} >${price}</Text>
-                <PlatoInfo latitude={latitude} longitude={longitude} name={name} latitudeDelta={latitudeDelta} longitudeDelta={longitudeDelta} />
+                <PlatoInfo 
+                    latitude={latitude} 
+                    longitude={longitude} 
+                    name={name} 
+                    latitudeDelta={latitudeDelta} 
+                    longitudeDelta={longitudeDelta} 
+                />
+                <Text style={styles.txtNamePlato}>Comentario</Text>
+                <Text>{review ? review : "Aun no existe comentario"}</Text>
             </View>
         )
     }

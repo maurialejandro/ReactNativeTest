@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     btnRegister: {
-        color: "#00a680",
+        color: "orange",
         fontWeight: "bold"
     },
     divider: {

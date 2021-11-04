@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
         margin: 0
     },
     btnAdd: {
-        backgroundColor: "#00a680",
+        backgroundColor: "orange",
         margin: 20
     },
     viewImage:{
