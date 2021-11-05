@@ -44,8 +44,8 @@ function Platos(props){
 			resizeMode="cover"
 			PlaceholderContent={<ActivityIndicator color="#000"/>}
 		    	source={
-			    img ? { uri : `${url}/get-file/${img.split(',')[0]}` } : require("../../../assets/img/default-image.png")
-			}
+			    	img ? { uri : `${url}/get-file/${img.split(',')[0]}` } : require("../../../assets/img/default-image.png")
+				}
 			style={styles.imagePlato}
 		    />
 		</View>
