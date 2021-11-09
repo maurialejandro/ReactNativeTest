@@ -130,8 +130,9 @@ export default function Favorites(){
             })
         }
         const goToPlato = () => {
-            navigation.navigate("Plato", {
-                plato: plato 
+            navigation.navigate("platos", {
+                screen: "Plato", 
+                params: {plato: plato} 
             })
         }
         const confirmRemoveFavorite = () => {

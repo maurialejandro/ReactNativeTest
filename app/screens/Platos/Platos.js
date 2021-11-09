@@ -76,6 +76,7 @@ export default function Platos(props){
 
     let getNextPlatos = async () => {
         if(skipPlatos < totalPlatos){
+            setIsLoading(true)
 	        const value = await AsyncStorage.getItem('@MySuperStore:666999')
 	        const token = await AsyncStorage.getItem('token')
 	        const formData = new FormData()
