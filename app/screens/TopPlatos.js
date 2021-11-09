@@ -61,6 +61,7 @@ export default function TopPlatos(){
         const goToPlato = () => {
             navigation.navigate("platos", {
                 screen: "Plato",
+                initial: false,
                 params: {plato: plato} 
             })
         }
