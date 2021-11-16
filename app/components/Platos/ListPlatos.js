@@ -20,9 +20,9 @@ export default function ListPlatos(props){
 			/>
  	    ) : (
 	        <View style={styles.loaderPlatos}>
-		    <ActivityIndicator size="large" /> 
-		    <Text>Cargando Platos</Text>
-		</View>
+		    	<ActivityIndicator size="large" /> 
+		    	<Text>Cargando Platos</Text>
+			</View>
 	    )}
 	</View>
     )
@@ -41,8 +41,8 @@ function Platos(props){
 	    <View style={styles.viewPlato}>
 		<View style={styles.viewPlatoImage} >
 		    <Image
-			resizeMode="cover"
-			PlaceholderContent={<ActivityIndicator color="#000"/>}
+				resizeMode="cover"
+				PlaceholderContent={<ActivityIndicator color="#000"/>}
 		    	source={
 			    	img ? { uri : `${url}/get-file/${img.split(',')[0]}` } : require("../../../assets/img/default-image.png")
 				}
@@ -69,7 +69,7 @@ function FooterList(props){
     }else{
 		return(
 		    <View style={styles.notFoundPlato}>
-			<Text>No quedan platos que mostrar</Text>
+				<Text>No quedan platos que mostrar</Text>
 		    </View>
 		)
     }

@@ -20,7 +20,6 @@ export default function Plato({ route, navigation }){
     
     useEffect(() => {
         userLoged()
-        console.log(is_favorite)
         if(is_favorite === true){
             setIsFavorite(true)
         }

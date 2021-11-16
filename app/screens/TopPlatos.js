@@ -3,7 +3,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import Loading from "../components/Loading";
-import { Icon } from "react-native-elements"
+import { Icon, Rating } from "react-native-elements"
 
 export default function TopPlatos(){
     const urlGetBestRating = `${url}/get-best-rating`
@@ -56,7 +56,7 @@ export default function TopPlatos(){
     }
     function Platos(props){
         const { plato } = props
-        const { name, img } = plato.item
+        const { name, img, rating } = plato.item
         const { navigation } = props
         const goToPlato = () => {
             navigation.navigate("platos", {
@@ -77,6 +77,17 @@ export default function TopPlatos(){
                             img ? { uri : `${url}/get-file/${img.split(',')[0]}` } : require("../../assets/img/default-image.png")
                         }
                     />
+                    <View style={styles.viewInfo} >
+                        <Text style={styles.txtName} >
+                            {name}
+                        </Text>
+                        <Rating 
+                                style={styles.rtg}
+                                imageSize={18}
+                                readonly
+                                startingValue={rating}
+                            />
+                    </View>
                 </TouchableOpacity>
             </View>
         )
@@ -108,6 +119,11 @@ const styles = StyleSheet.create({
     },
     plato: {
         margin: 10
+    },
+    rtg: {
+        position: "absolute",
+        right: 20,
+        marginTop: 15
     },
     image: {
         width: "100%",
