@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { View, Text, Button, FlatList, StyleSheet, TouchableOpacity, Image, ActivityIndicator, Alert } from "react-native";
 import Loading from "../components/Loading"
-import { size } from "lodash"
 import { Icon } from "react-native-elements"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -63,10 +62,9 @@ export default function Favorites(){
             console.log(error)
             AsyncStorage.removeItem('token')
         })
-    }   
-    
+    }
     if(!logged){
-        return (<UserNotLogued navigation={navigation} /> )
+        return (<UserNotLogued navigation={navigation} />)
     }
     function NotFoundPlato(){
         return(
@@ -80,7 +78,6 @@ export default function Favorites(){
             </View>
         )
     }
-
     function UserNotLogued(props){
         const { navigation } = props
         return (
@@ -100,7 +97,6 @@ export default function Favorites(){
             </View>
         )
     }
-
     function Platos(props){
         const { plato } = props
         const { name, img } = plato.item
@@ -193,7 +189,6 @@ export default function Favorites(){
         </View> 
     )
 }
-
 const styles = StyleSheet.create({
     viewbody: {
         flex: 1,

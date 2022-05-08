@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import { SearchBar, ListItem, Icon, Avatar } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Search(props){
     const { navigation } = props
     const [ search, setSearch ] = useState("")
-    const [ elements, setElements ] = useState({})
-
+    const [ elements, setElements ] = useState(null)
     const urlSearch = `${url}/search`
     useEffect(() => {
         if(search !== ""){
             searchSend(search)
         }
     },[search])
-
     const searchSend = async (data) => {
         const formData = new FormData()
         const token = await AsyncStorage.getItem('token')
@@ -39,10 +37,10 @@ export default function Search(props){
             <SearchBar 
                 placeholder="Busca tu plato"
                 onChangeText={ (e) => setSearch(e) }
-                containerStyle={styles.SearchBar}
+                containerStyle={styles.searchBar}
                 value={search}
             />
-            {elements.length > 0 ? (
+            {elements !== null ? (
                 <FlatList 
                     data={elements}
                     renderItem={(element) => <Plato navigation={navigation} element={element} />}
@@ -64,10 +62,12 @@ function Plato(props){
                 initial: false,
                 params: { plato: element }
             })
-        }} >
-            <Avatar source={
+        }}>
+            <Avatar
+                source={
 			    	img ? { uri : `${url}/get-file/${img.split(',')[0]}` } : require("../../assets/img/default-image.png")
-				} />
+				} 
+            />
             <ListItem.Content>
               <ListItem.Title>{name}</ListItem.Title>
             </ListItem.Content>
@@ -76,7 +76,6 @@ function Plato(props){
     )
 }
 function NoPlatos(props){
-    const {navigation} = props
     return(
         <View style={{ flex: 1, alignItems: "center" }}>
             <Image 
@@ -87,7 +86,7 @@ function NoPlatos(props){
     )
 }
 const styles = StyleSheet.create({
-    SearchBar:{
+    searchBar:{
         marginBottom: 20
     }
 })
