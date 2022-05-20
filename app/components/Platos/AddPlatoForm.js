@@ -15,13 +15,13 @@ const widthScreen = Dimensions.get("window").width
 export default function AddPlatoForm(props){
     
     const { toastRef, setIsLoading, navigation } = props
-    const [plato, setPlato] = useState("")
-    const [price, setPrice] = useState(0)
-    const [description, setDescription] = useState("")
-    const [files, setFiles] = useState([])
+    const [ plato, setPlato ] = useState("")
+    const [ price, setPrice ] = useState(0)
+    const [ description, setDescription ] = useState("")
+    const [ files, setFiles ] = useState([])
     const urlStorePlato = `${url}/store-platos`
-    const [isVisibleMap, setIsVisibleMap] = useState(false)
-    const [locationPlato, setLocationPlato] = useState(null)
+    const [ isVisibleMap, setIsVisibleMap ] = useState(false)
+    const [ locationPlato, setLocationPlato ] = useState(null)
     
     const addPlato = async () => {
         if( !plato || !price || !description ){
@@ -133,7 +133,7 @@ function ImageRestaurant(props){
     return(
         <View>
             <Image
-                source={image ? {uri: image } : require('../../../assets/img/default-image.png')}
+                source={ image ? {uri: image } : require('../../../assets/img/default-image.png') }
                 style={{ width: widthScreen, height: 200 }}
             />
         </View>
@@ -235,7 +235,7 @@ function FormAdd(props){
                         type="material-community"
                         name="google-maps"
                         color={locationPlato ? "#000000" : "#c2c2c2"}
-                        onPress={() => setIsVisibleMap(true)}
+                        onPress={ () => setIsVisibleMap(true) }
                     />
                     
                 }
@@ -244,7 +244,7 @@ function FormAdd(props){
                 placeholder="Descripcion del plato"
                 multiline={true}
                 inputContainerStyle={styles.textArea}
-                onChange={ (e) => setDescription(e.nativeEvent.text)}
+                onChange={ (e) => setDescription(e.nativeEvent.text) }
             /> 
         </View>
     )
