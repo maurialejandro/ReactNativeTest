@@ -31,7 +31,7 @@ export default function LoginForm(props){
                 })
                 .then((response) => response.json())
                 .then((responseJSON) => {
-                    console.log(responseJSON)
+                    console.log(responseJSON, 'aqui')
                     if(responseJSON.token){
                         setLoading(false)
                         _storeToken(responseJSON.token)

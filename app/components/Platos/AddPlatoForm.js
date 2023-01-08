@@ -41,8 +41,6 @@ export default function AddPlatoForm(props){
                 formData.append('description', description)
                 formData.append('latitude', locationPlato.latitude)
                 formData.append('longitude', locationPlato.longitude)
-                formData.append('latitudeDelta', locationPlato.latitudeDelta)
-                formData.append('longitudeDelta', locationPlato.longitudeDelta)
                 formData.append('token', token)
                 formData.append('path', JSON.stringify(response))
                 fetch(urlStorePlato ,{
@@ -53,6 +51,7 @@ export default function AddPlatoForm(props){
                 .then((response) => response.json())
                 .then((responseJSON) => {
                     setIsLoading(false)
+                    console.log("paso",responseJSON, locationPlato.latitude, locationPlato.longitude)
 		            navigation.reset({
 		            	index: 0,
 			            routes: [{ name: 'platos' }]
